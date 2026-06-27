@@ -76,34 +76,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
-import sys
-
-if os.environ.get('DATABASE_URL'):
-    DATABASES = {
-        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.giomzfubnyrmjqnbkbpf',
+        'PASSWORD': '31190124dyus2011',
+        'HOST': 'aws-1-ap-south-1.pooler.supabase.com',
+        'PORT': '6543',
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
-elif os.environ.get('USE_POSTGRES') == 'True':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'postgres',
-            'USER': 'postgres.giomzfubnyrmjqnbkbpf',
-            'PASSWORD': '31190124dyus2011',
-            'HOST': 'aws-1-ap-south-1.pooler.supabase.com',
-            'PORT': '6543',
-            'OPTIONS': {
-                'sslmode': 'require',
-            },
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -139,18 +124,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-STATIC_URL = '/static/'
-# Папка, куда собирается вся статика (включая админку) при команде collectstatic
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Настройка для поиска дополнительных файлов (чтобы не было ворнингов)
+# Безопасное добавление папки static, чтобы не было WARNINGS, если её нет
 STATIC_DIRS_PATH = os.path.join(BASE_DIR, 'static')
 if os.path.exists(STATIC_DIRS_PATH):
     STATICFILES_DIRS = [STATIC_DIRS_PATH]
+
+# Настройка WhiteNoise для хранения и сжатия файлов в кэш
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
