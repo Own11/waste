@@ -15,7 +15,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-j2&d(vq9de7kf$cag03cl
 # На Vercel по умолчанию False, локально можно задать через ENV
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
