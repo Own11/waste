@@ -163,11 +163,23 @@ class WorkerWriteOffCreateView(views.APIView):
         except (ValueError, TypeError):
             return Response({"error": "Неверное количество товара."}, status=status.HTTP_400_BAD_REQUEST)
 
+        photo_base64 = None
+        if photo:
+            try:
+                import base64
+                # Read bytes and convert to base64 string
+                photo_data = photo.read()
+                content_type = photo.content_type or 'image/jpeg'
+                encoded = base64.b64encode(photo_data).decode('utf-8')
+                photo_base64 = f"data:{content_type};base64,{encoded}"
+            except Exception as e:
+                logger.error(f"Error encoding photo to base64: {e}")
+
         write_off = WriteOff.objects.create(
             employee=request.user,
             branch=branch,
             product=product,
-            photo=photo,
+            photo=photo_base64,
             ai_confidence=float(ai_confidence),
             reason=reason,
             quantity=quantity,
