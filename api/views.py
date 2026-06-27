@@ -1,12 +1,15 @@
+# pyrefly: ignore [missing-import]
 from rest_framework import status, permissions, views
+# pyrefly: ignore [missing-import]
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Count, Q
 from django.utils import timezone
 from decimal import Decimal
 import logging
-
+# pyrefly: ignore [missing-import]
 from rest_framework_simplejwt.views import TokenObtainPairView
+# pyrefly: ignore [missing-import]
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import User, Branch, Product, Supplier, Supply, WriteOff, EmployeeBadge
@@ -39,6 +42,28 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+# --- SHARED RESOURCE VIEWS ---
+
+class ProductsListView(views.APIView):
+    """Returns all products available for write-off selection."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        products = Product.objects.all().order_by('name')
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+
+class BranchesListView(views.APIView):
+    """Returns all branches (for dropdowns)."""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        branches = Branch.objects.all().order_by('name')
+        serializer = BranchSerializer(branches, many=True)
+        return Response(serializer.data)
 
 
 # --- CUSTOM PERMISSION GUARDS ---

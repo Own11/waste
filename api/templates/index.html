@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bahandi — Автоматизация списаний</title>
-    <meta name="description" content="Система автоматизации процесса списания на торговых точках с AI-анализом и геймификацией">
-    
+    <meta name="description"
+        content="Система автоматизации процесса списания на торговых точках с AI-анализом и геймификацией">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
             --bg: #0a0b0f;
@@ -18,197 +22,841 @@
             --surface-3: #22262f;
             --border: #2a2e3a;
             --border-focus: #3d4356;
-            
+
             --text: #f0f1f4;
             --text-2: #9ba1b0;
             --text-3: #6b7080;
-            
+
             --blue: #3b82f6;
             --blue-hover: #60a5fa;
-            --blue-bg: rgba(59,130,246,.12);
+            --blue-bg: rgba(59, 130, 246, .12);
             --green: #10b981;
-            --green-bg: rgba(16,185,129,.12);
+            --green-bg: rgba(16, 185, 129, .12);
             --amber: #f59e0b;
-            --amber-bg: rgba(245,158,11,.12);
+            --amber-bg: rgba(245, 158, 11, .12);
             --red: #ef4444;
-            --red-bg: rgba(239,68,68,.12);
+            --red-bg: rgba(239, 68, 68, .12);
             --purple: #a78bfa;
-            --purple-bg: rgba(167,139,250,.12);
-            
+            --purple-bg: rgba(167, 139, 250, .12);
+
             --font: 'Inter', system-ui, sans-serif;
             --mono: 'JetBrains Mono', monospace;
-            --ease: cubic-bezier(.4,0,.2,1);
+            --ease: cubic-bezier(.4, 0, .2, 1);
         }
-        *{box-sizing:border-box;margin:0;padding:0}
-        body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.55;-webkit-font-smoothing:antialiased}
-        
-        .app{max-width:540px;margin:0 auto;padding:1rem;min-height:100vh;display:flex;flex-direction:column}
-        
-        /* Header */
-        header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border);margin-bottom:1.25rem}
-        .logo{font-family:var(--mono);font-weight:700;font-size:1.15rem;letter-spacing:-.04em;display:flex;align-items:center;gap:.4rem}
-        .logo b{color:var(--blue)}
-        .user-chip{display:flex;align-items:center;gap:.5rem}
-        .chip{font-family:var(--mono);font-size:.75rem;font-weight:600;text-transform:uppercase;padding:.15rem .5rem;border-radius:3px}
-        .chip-worker{background:var(--green-bg);color:var(--green);border:1px solid rgba(16,185,129,.25)}
-        .chip-manager{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
-        .chip-admin{background:var(--purple-bg);color:var(--purple);border:1px solid rgba(167,139,250,.25)}
-        .btn-out{background:none;border:none;color:var(--text-3);font-family:var(--mono);font-size:.75rem;cursor:pointer;padding:.2rem .4rem;border-radius:3px;transition:all .15s var(--ease)}
-        .btn-out:hover{color:var(--red);background:var(--red-bg)}
-        
-        /* Panels */
-        .panel{display:none;flex-direction:column;gap:1.25rem;flex-grow:1;animation:fadeIn .25s var(--ease)}
-        .panel.active{display:flex}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-        
-        /* Cards */
-        .card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.15rem;position:relative;overflow:hidden;transition:border-color .15s var(--ease)}
-        .card:hover{border-color:var(--border-focus)}
-        .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.65rem}
-        
-        /* Typography */
-        h1{font-size:1.4rem;font-weight:700;letter-spacing:-.03em}
-        h2{font-size:1.2rem;font-weight:600;letter-spacing:-.02em;margin-bottom:.35rem}
-        h3{font-size:1rem;font-weight:600;letter-spacing:-.01em;margin-bottom:.25rem}
-        .sub{font-size:.85rem;color:var(--text-2);margin-bottom:.75rem}
-        
-        /* Forms */
-        .fg{margin-bottom:1.1rem}
-        .fg label{display:block;font-size:.82rem;font-weight:500;color:var(--text-2);margin-bottom:.4rem}
-        .fc{width:100%;background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:.7rem .75rem;font-size:.9rem;font-family:var(--font);transition:border-color .15s var(--ease)}
-        .fc:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px var(--blue-bg)}
-        select.fc{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ba1b0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .7rem center;background-size:1rem;padding-right:2.4rem}
-        textarea.fc{resize:vertical;min-height:70px}
-        
-        /* File upload */
-        .file-area{border:1px dashed var(--border);background:var(--surface-2);border-radius:5px;padding:1.25rem;text-align:center;cursor:pointer;position:relative;transition:all .15s var(--ease)}
-        .file-area:hover{border-color:var(--border-focus);background:var(--surface-3)}
-        .file-area input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
-        .file-label{font-size:.82rem;color:var(--text-2);display:flex;flex-direction:column;align-items:center;gap:.4rem}
-        .file-label svg{width:22px;height:22px;color:var(--text-3)}
-        .file-name{margin-top:.35rem;font-family:var(--mono);font-size:.78rem;color:var(--green);word-break:break-all}
-        
-        /* Buttons */
-        .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;width:100%;padding:.7rem;border-radius:5px;font-size:.9rem;font-weight:500;cursor:pointer;border:none;font-family:var(--font);transition:all .15s var(--ease)}
-        .btn:disabled{opacity:.45;cursor:not-allowed}
-        .btn-blue{background:var(--blue);color:#fff}
-        .btn-blue:hover:not(:disabled){background:var(--blue-hover)}
-        .btn-green{background:var(--green);color:#fff}
-        .btn-green:hover:not(:disabled){opacity:.9}
-        .btn-red{background:var(--red);color:#fff}
-        .btn-red:hover:not(:disabled){opacity:.9}
-        .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
-        .btn-ghost:hover:not(:disabled){background:var(--surface-2)}
-        .btn-sm{width:auto;padding:.45rem .85rem;font-size:.82rem}
-        
-        /* Status badges */
-        .badge{font-size:.72rem;font-weight:600;padding:.12rem .45rem;border-radius:3px;font-family:var(--mono);display:inline-block}
-        .badge-pending{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
-        .badge-approved{background:var(--green-bg);color:var(--green);border:1px solid rgba(16,185,129,.2)}
-        .badge-rejected{background:var(--red-bg);color:var(--red);border:1px solid rgba(239,68,68,.2)}
-        
-        /* Lists */
-        .list{display:flex;flex-direction:column;gap:.65rem}
-        .item{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:.9rem;transition:border-color .15s var(--ease)}
-        .item:hover{border-color:var(--border-focus)}
-        .item-meta{display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-2);font-family:var(--mono);margin-bottom:.4rem}
-        .item-title{font-weight:600;font-size:.95rem;margin-bottom:.15rem}
-        .item-desc{font-size:.85rem;color:var(--text-2);background:var(--surface-2);padding:.4rem .65rem;border-left:2px solid var(--border);margin:.4rem 0;border-radius:0 4px 4px 0;word-break:break-word}
-        .item-details{font-size:.78rem;color:var(--text-3);display:flex;flex-direction:column;gap:.2rem;margin-top:.35rem}
-        
-        /* Review card */
-        .review-card{border-left:3px solid var(--amber)}
-        .review-actions{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.85rem}
-        
-        /* Stats grid */
-        .stats{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
-        .stat{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:.75rem}
-        .stat-val{font-family:var(--mono);font-size:1.3rem;font-weight:700;letter-spacing:-.03em}
-        .stat-label{font-size:.75rem;color:var(--text-3);margin-top:.15rem}
-        
-        /* Badge list */
-        .badge-list{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem}
-        .badge-item{background:var(--purple-bg);color:var(--purple);border:1px solid rgba(167,139,250,.2);font-size:.75rem;padding:.2rem .5rem;border-radius:3px;font-family:var(--mono)}
-        
-        /* Tabs */
-        .tabs{display:flex;gap:.35rem;margin-bottom:1rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
-        .tab{padding:.45rem .85rem;border-radius:5px;font-size:.82rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text-2);white-space:nowrap;transition:all .15s var(--ease);font-family:var(--font)}
-        .tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-        .tab:hover:not(.active){background:var(--surface-2);color:var(--text)}
-        .tab-content{display:none}
-        .tab-content.active{display:block;animation:fadeIn .2s var(--ease)}
-        
-        /* Photo thumb */
-        .photo-thumb{margin-top:.6rem;position:relative;cursor:pointer;border-radius:5px;overflow:hidden;border:1px solid var(--border);height:100px;background:#000}
-        .photo-thumb img{width:100%;height:100%;object-fit:cover;opacity:.8;transition:opacity .15s}
-        .photo-thumb:hover img{opacity:1}
-        
-        /* Modal */
-        .modal{display:none;position:fixed;z-index:100;inset:0;background:rgba(0,0,0,.92);align-items:center;justify-content:center;padding:1rem}
-        .modal.active{display:flex}
-        .modal img{max-width:100%;max-height:80vh;border-radius:5px;border:1px solid var(--border)}
-        .modal-close{position:absolute;top:1rem;right:1rem;color:#fff;font-size:2rem;cursor:pointer;background:none;border:none;line-height:1}
-        
-        /* Error/feedback */
-        .err-box{background:var(--red-bg);border:1px solid rgba(239,68,68,.3);color:var(--red);padding:.65rem;border-radius:5px;font-size:.82rem;margin-bottom:.85rem;display:none}
-        .err-field{color:var(--red);font-size:.78rem;margin-top:.25rem;display:none}
-        
-        /* AI insight card */
-        .ai-card{background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(167,139,250,.08));border:1px solid rgba(99,102,241,.2);border-radius:7px;padding:.85rem;margin-top:.5rem}
-        .ai-card h3{color:var(--purple);font-size:.88rem}
-        .ai-card p{font-size:.82rem;color:var(--text-2);margin-top:.3rem;line-height:1.5}
-        
-        /* Supplier table */
-        .s-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:.5rem}
-        .s-table th{text-align:left;padding:.5rem .4rem;color:var(--text-3);border-bottom:1px solid var(--border);font-weight:500;font-family:var(--mono);font-size:.72rem;text-transform:uppercase}
-        .s-table td{padding:.5rem .4rem;border-bottom:1px solid rgba(42,46,58,.5);vertical-align:middle}
-        .s-table tr:last-child td{border-bottom:none}
-        .s-rating{font-family:var(--mono);font-weight:600}
-        .s-rating.good{color:var(--green)}
-        .s-rating.mid{color:var(--amber)}
-        .s-rating.bad{color:var(--red)}
-        
-        /* Heatmap */
-        .heat-list{display:flex;flex-direction:column;gap:.5rem}
-        .heat-item{display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:.65rem .85rem}
-        .heat-dot{width:10px;height:10px;border-radius:50%;margin-right:.6rem;flex-shrink:0}
-        .heat-dot.green{background:var(--green)}
-        .heat-dot.yellow{background:var(--amber)}
-        .heat-dot.red{background:var(--red)}
-        .heat-info{flex:1}
-        .heat-name{font-size:.88rem;font-weight:500}
-        .heat-city{font-size:.72rem;color:var(--text-3);font-family:var(--mono)}
-        .heat-val{font-family:var(--mono);font-weight:600;font-size:.88rem}
-        
-        /* Loading */
-        .spinner{border:2px solid rgba(255,255,255,.1);width:16px;height:16px;border-radius:50%;border-left-color:#fff;animation:spin .7s linear infinite;display:inline-block}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .loading-overlay{position:absolute;inset:0;background:rgba(10,11,15,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;z-index:10;font-family:var(--mono);font-size:.82rem;border-radius:8px}
-        .loading-overlay .spinner{width:22px;height:22px;border-width:3px}
-        
-        /* Toast */
-        .toasts{position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:200;width:calc(100% - 2rem);max-width:400px;display:flex;flex-direction:column;gap:.4rem}
-        .toast{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:.65rem .85rem;border-radius:5px;box-shadow:0 4px 16px rgba(0,0,0,.5);font-size:.82rem;display:flex;align-items:center;gap:.45rem;animation:slideUp .2s var(--ease)}
-        .toast-ok{border-left:3px solid var(--green)}
-        .toast-err{border-left:3px solid var(--red)}
-        .toast-warn{border-left:3px solid var(--amber)}
-        @keyframes slideUp{from{transform:translateY(.75rem);opacity:0}to{transform:translateY(0);opacity:1}}
-        
-        /* Utility */
-        .hide{display:none!important}
-        .mt-1{margin-top:.5rem}
-        .mt-2{margin-top:.85rem}
-        .text-c{text-align:center}
-        .empty{color:var(--text-3);font-size:.85rem;text-align:center;padding:2rem 0}
-        
-        /* Footer */
-        footer{font-family:var(--mono);font-size:.7rem;color:var(--text-3);text-align:center;margin-top:auto;padding-top:1.5rem}
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased
+        }
+
+        .app {
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: .75rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.25rem
+        }
+
+        .logo {
+            font-family: var(--mono);
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -.04em;
+            display: flex;
+            align-items: center;
+            gap: .4rem
+        }
+
+        .logo b {
+            color: var(--blue)
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: .5rem
+        }
+
+        .chip {
+            font-family: var(--mono);
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: .15rem .5rem;
+            border-radius: 3px
+        }
+
+        .chip-worker {
+            background: var(--green-bg);
+            color: var(--green);
+            border: 1px solid rgba(16, 185, 129, .25)
+        }
+
+        .chip-manager {
+            background: var(--amber-bg);
+            color: var(--amber);
+            border: 1px solid rgba(245, 158, 11, .25)
+        }
+
+        .chip-admin {
+            background: var(--purple-bg);
+            color: var(--purple);
+            border: 1px solid rgba(167, 139, 250, .25)
+        }
+
+        .btn-out {
+            background: none;
+            border: none;
+            color: var(--text-3);
+            font-family: var(--mono);
+            font-size: .75rem;
+            cursor: pointer;
+            padding: .2rem .4rem;
+            border-radius: 3px;
+            transition: all .15s var(--ease)
+        }
+
+        .btn-out:hover {
+            color: var(--red);
+            background: var(--red-bg)
+        }
+
+        .panel {
+            display: none;
+            flex-direction: column;
+            gap: 1.25rem;
+            flex-grow: 1;
+            animation: fadeIn .25s var(--ease)
+        }
+
+        .panel.active {
+            display: flex
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.15rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .15s var(--ease)
+        }
+
+        .card:hover {
+            border-color: var(--border-focus)
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -.03em
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: -.02em;
+            margin-bottom: .35rem
+        }
+
+        h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: -.01em;
+            margin-bottom: .25rem
+        }
+
+        .sub {
+            font-size: .85rem;
+            color: var(--text-2);
+            margin-bottom: .75rem
+        }
+
+        .fg {
+            margin-bottom: 1.1rem
+        }
+
+        .fg label {
+            display: block;
+            font-size: .82rem;
+            font-weight: 500;
+            color: var(--text-2);
+            margin-bottom: .4rem
+        }
+
+        .fc {
+            width: 100%;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 5px;
+            padding: .7rem .75rem;
+            font-size: .9rem;
+            font-family: var(--font);
+            transition: border-color .15s var(--ease)
+        }
+
+        .fc:focus {
+            border-color: var(--blue);
+            outline: none;
+            box-shadow: 0 0 0 3px var(--blue-bg)
+        }
+
+        select.fc {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ba1b0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right .7rem center;
+            background-size: 1rem;
+            padding-right: 2.4rem
+        }
+
+        textarea.fc {
+            resize: vertical;
+            min-height: 70px
+        }
+
+        .file-area {
+            border: 1px dashed var(--border);
+            background: var(--surface-2);
+            border-radius: 5px;
+            padding: 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: all .15s var(--ease)
+        }
+
+        .file-area:hover {
+            border-color: var(--border-focus);
+            background: var(--surface-3)
+        }
+
+        .file-area input[type=file] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer
+        }
+
+        .file-label {
+            font-size: .82rem;
+            color: var(--text-2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .4rem
+        }
+
+        .file-label svg {
+            width: 22px;
+            height: 22px;
+            color: var(--text-3)
+        }
+
+        .file-name {
+            margin-top: .35rem;
+            font-family: var(--mono);
+            font-size: .78rem;
+            color: var(--green);
+            word-break: break-all
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .45rem;
+            width: 100%;
+            padding: .7rem;
+            border-radius: 5px;
+            font-size: .9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            font-family: var(--font);
+            transition: all .15s var(--ease)
+        }
+
+        .btn:disabled {
+            opacity: .45;
+            cursor: not-allowed
+        }
+
+        .btn-blue {
+            background: var(--blue);
+            color: #fff
+        }
+
+        .btn-blue:hover:not(:disabled) {
+            background: var(--blue-hover)
+        }
+
+        .btn-green {
+            background: var(--green);
+            color: #fff
+        }
+
+        .btn-green:hover:not(:disabled) {
+            opacity: .9
+        }
+
+        .btn-red {
+            background: var(--red);
+            color: #fff
+        }
+
+        .btn-red:hover:not(:disabled) {
+            opacity: .9
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text)
+        }
+
+        .btn-ghost:hover:not(:disabled) {
+            background: var(--surface-2)
+        }
+
+        .btn-sm {
+            width: auto;
+            padding: .45rem .85rem;
+            font-size: .82rem
+        }
+
+        .badge {
+            font-size: .72rem;
+            font-weight: 600;
+            padding: .12rem .45rem;
+            border-radius: 3px;
+            font-family: var(--mono);
+            display: inline-block
+        }
+
+        .badge-pending {
+            background: var(--amber-bg);
+            color: var(--amber);
+            border: 1px solid rgba(245, 158, 11, .2)
+        }
+
+        .badge-approved {
+            background: var(--green-bg);
+            color: var(--green);
+            border: 1px solid rgba(16, 185, 129, .2)
+        }
+
+        .badge-rejected {
+            background: var(--red-bg);
+            color: var(--red);
+            border: 1px solid rgba(239, 68, 68, .2)
+        }
+
+        .list {
+            display: flex;
+            flex-direction: column;
+            gap: .65rem
+        }
+
+        .item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: .9rem;
+            transition: border-color .15s var(--ease)
+        }
+
+        .item:hover {
+            border-color: var(--border-focus)
+        }
+
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: .78rem;
+            color: var(--text-2);
+            font-family: var(--mono);
+            margin-bottom: .4rem
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: .95rem;
+            margin-bottom: .15rem
+        }
+
+        .item-details {
+            font-size: .78rem;
+            color: var(--text-3);
+            display: flex;
+            flex-direction: column;
+            gap: .2rem;
+            margin-top: .35rem
+        }
+
+        .review-card {
+            border-left: 3px solid var(--amber)
+        }
+
+        .review-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .65rem;
+            margin-top: .85rem
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .65rem
+        }
+
+        .stat {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: .75rem
+        }
+
+        .stat-val {
+            font-family: var(--mono);
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -.03em
+        }
+
+        .stat-label {
+            font-size: .75rem;
+            color: var(--text-3);
+            margin-top: .15rem
+        }
+
+        .badge-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .4rem;
+            margin-top: .4rem
+        }
+
+        .badge-item {
+            background: var(--purple-bg);
+            color: var(--purple);
+            border: 1px solid rgba(167, 139, 250, .2);
+            font-size: .75rem;
+            padding: .2rem .5rem;
+            border-radius: 3px;
+            font-family: var(--mono)
+        }
+
+        .tabs {
+            display: flex;
+            gap: .35rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch
+        }
+
+        .tab {
+            padding: .45rem .85rem;
+            border-radius: 5px;
+            font-size: .82rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-2);
+            white-space: nowrap;
+            transition: all .15s var(--ease);
+            font-family: var(--font)
+        }
+
+        .tab.active {
+            background: var(--blue);
+            color: #fff;
+            border-color: var(--blue)
+        }
+
+        .tab:hover:not(.active) {
+            background: var(--surface-2);
+            color: var(--text)
+        }
+
+        .tab-content {
+            display: none
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn .2s var(--ease)
+        }
+
+        .photo-thumb {
+            margin-top: .6rem;
+            position: relative;
+            cursor: pointer;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            height: 100px;
+            background: #000
+        }
+
+        .photo-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: .8;
+            transition: opacity .15s
+        }
+
+        .photo-thumb:hover img {
+            opacity: 1
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            inset: 0;
+            background: rgba(0, 0, 0, .92);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem
+        }
+
+        .modal.active {
+            display: flex
+        }
+
+        .modal img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 5px;
+            border: 1px solid var(--border)
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            line-height: 1
+        }
+
+        .err-box {
+            background: var(--red-bg);
+            border: 1px solid rgba(239, 68, 68, .3);
+            color: var(--red);
+            padding: .65rem;
+            border-radius: 5px;
+            font-size: .82rem;
+            margin-bottom: .85rem;
+            display: none
+        }
+
+        .ai-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, .08), rgba(167, 139, 250, .08));
+            border: 1px solid rgba(99, 102, 241, .2);
+            border-radius: 7px;
+            padding: .85rem;
+            margin-top: .5rem
+        }
+
+        .ai-card h3 {
+            color: var(--purple);
+            font-size: .88rem
+        }
+
+        .ai-card p {
+            font-size: .82rem;
+            color: var(--text-2);
+            margin-top: .3rem;
+            line-height: 1.5
+        }
+
+        .s-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .8rem;
+            margin-top: .5rem
+        }
+
+        .s-table th {
+            text-align: left;
+            padding: .5rem .4rem;
+            color: var(--text-3);
+            border-bottom: 1px solid var(--border);
+            font-weight: 500;
+            font-family: var(--mono);
+            font-size: .72rem;
+            text-transform: uppercase
+        }
+
+        .s-table td {
+            padding: .5rem .4rem;
+            border-bottom: 1px solid rgba(42, 46, 58, .5);
+            vertical-align: middle
+        }
+
+        .s-table tr:last-child td {
+            border-bottom: none
+        }
+
+        .s-rating {
+            font-family: var(--mono);
+            font-weight: 600
+        }
+
+        .s-rating.good {
+            color: var(--green)
+        }
+
+        .s-rating.mid {
+            color: var(--amber)
+        }
+
+        .s-rating.bad {
+            color: var(--red)
+        }
+
+        .heat-list {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem
+        }
+
+        .heat-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: .65rem .85rem
+        }
+
+        .heat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: .6rem;
+            flex-shrink: 0
+        }
+
+        .heat-dot.green {
+            background: var(--green)
+        }
+
+        .heat-dot.yellow {
+            background: var(--amber)
+        }
+
+        .heat-dot.red {
+            background: var(--red)
+        }
+
+        .heat-info {
+            flex: 1
+        }
+
+        .heat-name {
+            font-size: .88rem;
+            font-weight: 500
+        }
+
+        .heat-city {
+            font-size: .72rem;
+            color: var(--text-3);
+            font-family: var(--mono)
+        }
+
+        .heat-val {
+            font-family: var(--mono);
+            font-weight: 600;
+            font-size: .88rem
+        }
+
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, .1);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border-left-color: #fff;
+            animation: spin .7s linear infinite;
+            display: inline-block
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .loading-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 11, 15, .85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: .4rem;
+            z-index: 10;
+            font-family: var(--mono);
+            font-size: .82rem;
+            border-radius: 8px
+        }
+
+        .loading-overlay .spinner {
+            width: 22px;
+            height: 22px;
+            border-width: 3px
+        }
+
+        .toasts {
+            position: fixed;
+            bottom: 1.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            width: calc(100% - 2rem);
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: .4rem
+        }
+
+        .toast {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: .65rem .85rem;
+            border-radius: 5px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
+            font-size: .82rem;
+            display: flex;
+            align-items: center;
+            gap: .45rem;
+            animation: slideUp .2s var(--ease)
+        }
+
+        .toast-ok {
+            border-left: 3px solid var(--green)
+        }
+
+        .toast-err {
+            border-left: 3px solid var(--red)
+        }
+
+        .toast-warn {
+            border-left: 3px solid var(--amber)
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(.75rem);
+                opacity: 0
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1
+            }
+        }
+
+        .hide {
+            display: none !important
+        }
+
+        .mt-1 {
+            margin-top: .5rem
+        }
+
+        .mt-2 {
+            margin-top: .85rem
+        }
+
+        .text-c {
+            text-align: center
+        }
+
+        .empty {
+            color: var(--text-3);
+            font-size: .85rem;
+            text-align: center;
+            padding: 2rem 0
+        }
+
+        footer {
+            font-family: var(--mono);
+            font-size: .7rem;
+            color: var(--text-3);
+            text-align: center;
+            margin-top: auto;
+            padding-top: 1.5rem
+        }
+
+        .debug-panel {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: .5rem;
+            margin-top: .5rem;
+            font-family: var(--mono);
+            font-size: .7rem;
+            color: var(--text-3)
+        }
+
+        .debug-panel pre {
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 0
+        }
     </style>
 </head>
+
 <body>
     <div class="app">
-        
-        <!-- Header -->
+
         <header>
             <div class="logo">BAHANDI<b>.AI</b></div>
             <div id="userInfo" class="user-chip hide">
@@ -217,11 +865,11 @@
                 <button onclick="logout()" class="btn-out">✕</button>
             </div>
         </header>
-        
+
         <main>
             <div id="errBox" class="err-box"></div>
 
-            <!-- ═══════════ AUTH PANEL ═══════════ -->
+            <!-- AUTH PANEL -->
             <section id="panelAuth" class="panel active">
                 <div class="card">
                     <h2 class="text-c" style="margin-bottom:.3rem">Вход в систему</h2>
@@ -229,11 +877,13 @@
                     <form id="authForm" onsubmit="event.preventDefault();doLogin()">
                         <div class="fg">
                             <label for="inUser">Логин</label>
-                            <input type="text" id="inUser" class="fc" placeholder="worker1" required autocomplete="username">
+                            <input type="text" id="inUser" class="fc" placeholder="worker1" required
+                                autocomplete="username">
                         </div>
                         <div class="fg">
                             <label for="inPass">Пароль</label>
-                            <input type="password" id="inPass" class="fc" placeholder="••••••••" required autocomplete="current-password">
+                            <input type="password" id="inPass" class="fc" placeholder="••••••••" required
+                                autocomplete="current-password">
                         </div>
                         <button type="submit" id="btnLogin" class="btn btn-blue mt-1">
                             <span>Войти</span>
@@ -242,18 +892,28 @@
                 </div>
             </section>
 
-            <!-- ═══════════ WORKER PANEL ═══════════ -->
+            <!-- WORKER PANEL -->
             <section id="panelWorker" class="panel">
-                
-                <!-- Profile card -->
                 <div class="card" id="workerProfile">
                     <h2>Мой профиль</h2>
                     <p class="sub" id="wpName">—</p>
                     <div class="stats" id="wpStats">
-                        <div class="stat"><div class="stat-val" id="wpTotal">0</div><div class="stat-label">Всего списаний</div></div>
-                        <div class="stat"><div class="stat-val" id="wpAccuracy">100%</div><div class="stat-label">Точность</div></div>
-                        <div class="stat"><div class="stat-val" id="wpApproved" style="color:var(--green)">0</div><div class="stat-label">Одобрено</div></div>
-                        <div class="stat"><div class="stat-val" id="wpRejected" style="color:var(--red)">0</div><div class="stat-label">Отклонено</div></div>
+                        <div class="stat">
+                            <div class="stat-val" id="wpTotal">0</div>
+                            <div class="stat-label">Всего списаний</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-val" id="wpAccuracy">100%</div>
+                            <div class="stat-label">Точность</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-val" id="wpApproved" style="color:var(--green)">0</div>
+                            <div class="stat-label">Одобрено</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-val" id="wpRejected" style="color:var(--red)">0</div>
+                            <div class="stat-label">Отклонено</div>
+                        </div>
                     </div>
                     <div id="wpBadges" class="badge-list mt-1"></div>
                     <div id="wpAiTips" class="ai-card hide mt-2">
@@ -262,30 +922,35 @@
                     </div>
                 </div>
 
-                <!-- Write-off create form -->
                 <div class="card">
                     <h2>Новое списание</h2>
                     <p class="sub">Зафиксируйте потерю продукта</p>
-                    
+
                     <form id="woForm" onsubmit="event.preventDefault();createWriteOff()">
                         <div class="fg">
                             <label for="woProduct">Продукт</label>
-                            <select id="woProduct" class="fc" required>
-                                <option value="">Выберите продукт...</option>
+                            <select id="woProduct" class="fc" required onchange="onProductChange(this)">
+                                <option value="">Загрузка продуктов...</option>
                             </select>
+                            <div id="productDebug" class="debug-panel">
+                                <pre id="productDebugContent">⏳ Загрузка продуктов...</pre>
+                            </div>
                         </div>
                         <div class="fg">
-                            <label for="woQty">Количество</label>
-                            <input type="number" id="woQty" class="fc" step="0.001" min="0.001" placeholder="10" required>
+                            <label for="woQty">Количество <span id="woQtyUnit"
+                                    style="color:var(--blue);font-family:var(--mono)"></span></label>
+                            <input type="number" id="woQty" class="fc" step="0.001" min="0.001" placeholder="10"
+                                required>
                         </div>
                         <div class="fg">
                             <label for="woReason">Причина</label>
                             <select id="woReason" class="fc" required>
                                 <option value="">Выберите причину...</option>
-                                <option value="expiration">Истёк срок годности</option>
-                                <option value="spoiled">Испортился</option>
-                                <option value="cooking_error">Ошибка при приготовлении</option>
-                                <option value="supplier_defect">Брак от поставщика</option>
+                                <option value="expiration">Просрочка</option>
+                                <option value="spoiled">Испорчен</option>
+                                <option value="damaged">Поврежден</option>
+                                <option value="cooking_error">Ошибка приготовления</option>
+                                <option value="supplier_defect">Брак поставщика</option>
                                 <option value="other">Другое</option>
                             </select>
                         </div>
@@ -294,7 +959,12 @@
                             <div class="file-area">
                                 <input type="file" id="woPhoto" accept="image/*" onchange="onFile(this,'woFileName')">
                                 <div class="file-label">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                                        <circle cx="8.5" cy="8.5" r="1.5" />
+                                        <polyline points="21 15 16 10 5 21" />
+                                    </svg>
                                     <span>Выбрать или сделать снимок</span>
                                 </div>
                                 <div id="woFileName" class="file-name hide"></div>
@@ -306,7 +976,6 @@
                     </form>
                 </div>
 
-                <!-- Worker's write-off history -->
                 <div>
                     <h2>Мои списания</h2>
                     <p class="sub">Ваши отправленные списания</p>
@@ -314,65 +983,61 @@
                 </div>
             </section>
 
-            <!-- ═══════════ MANAGER PANEL ═══════════ -->
+            <!-- MANAGER PANEL -->
             <section id="panelManager" class="panel">
-                
                 <div class="tabs">
                     <div class="tab active" onclick="switchTab('mgr','mgrPending',this)">Заявки</div>
                     <div class="tab" onclick="switchTab('mgr','mgrSuppliers',this)">Поставщики</div>
                     <div class="tab" onclick="switchTab('mgr','mgrAnalytics',this)">Аналитика</div>
                 </div>
 
-                <!-- Pending requests -->
                 <div id="mgrPending" class="tab-content active">
                     <h2>На проверке</h2>
                     <p class="sub">Заявки, ожидающие ваше решение</p>
                     <div id="mgrRequestsList" class="list"></div>
                 </div>
 
-                <!-- Suppliers -->
                 <div id="mgrSuppliers" class="tab-content">
                     <h2>Поставщики</h2>
                     <p class="sub">Рейтинг и аналитика по поставщикам</p>
                     <div id="suppliersTable"></div>
                 </div>
 
-                <!-- Analytics -->
                 <div id="mgrAnalytics" class="tab-content">
                     <h2>Панель аналитики</h2>
                     <p class="sub">Ключевые метрики сети</p>
                     <div id="dashboardContent"></div>
-                    
+
                     <h3 class="mt-2">Тепловая карта</h3>
                     <p class="sub">Потери по филиалам</p>
                     <div id="heatmapContent" class="heat-list"></div>
-                    
+
                     <button class="btn btn-ghost btn-sm mt-2" onclick="exportSheets()" id="btnExport">
                         <span>📊 Экспорт в Google Sheets</span>
                     </button>
                 </div>
             </section>
 
-            <!-- ═══════════ ADMIN PANEL ═══════════ -->
+            <!-- ADMIN PANEL -->
             <section id="panelAdmin" class="panel">
                 <div class="tabs">
                     <div class="tab active" onclick="switchTab('adm','admDash',this)">Дашборд</div>
                     <div class="tab" onclick="switchTab('adm','admHeatmap',this)">Тепловая карта</div>
                     <div class="tab" onclick="switchTab('adm','admExport',this)">Экспорт</div>
                 </div>
-                
+
                 <div id="admDash" class="tab-content active">
                     <h2>Общая аналитика</h2>
                     <p class="sub">Метрики и AI-инсайты по всей сети</p>
                     <div id="admDashContent"></div>
                 </div>
-                
+
                 <div id="admHeatmap" class="tab-content">
                     <h2>Тепловая карта</h2>
                     <p class="sub">Визуализация потерь по филиалам</p>
                     <div id="admHeatContent" class="heat-list"></div>
                 </div>
-                
+
                 <div id="admExport" class="tab-content">
                     <h2>Экспорт данных</h2>
                     <p class="sub">Выгрузка в Google Sheets</p>
@@ -393,320 +1058,386 @@
         <button class="modal-close" onclick="closeLB()">×</button>
         <img id="lbImg" src="" alt="Фото" onclick="event.stopPropagation()">
     </div>
-    
+
     <!-- Toasts -->
     <div id="toasts" class="toasts"></div>
 
     <script>
-    // ╔══════════════════════════════════════════╗
-    // ║          APPLICATION STATE               ║
-    // ╚══════════════════════════════════════════╝
-    
-    const API = window.location.origin;
-    let TOKEN = localStorage.getItem('bh_token');
-    let REFRESH = localStorage.getItem('bh_refresh');
-    let ROLE = localStorage.getItem('bh_role');
-    let UNAME = localStorage.getItem('bh_uname');
-    let FNAME = localStorage.getItem('bh_fname');
-    let productsCache = null;
-    
-    document.addEventListener('DOMContentLoaded', init);
-    
-    function init() {
-        if (TOKEN && ROLE) {
-            showUserChip();
-            routeToPanel();
-        } else {
-            hideUserChip();
-            show('panelAuth');
-        }
-    }
+        // ════════════════════════════════════════════
+        // APPLICATION STATE
+        // ════════════════════════════════════════════
 
-    // ╔══════════════════════════════════════════╗
-    // ║          AUTH                            ║
-    // ╚══════════════════════════════════════════╝
+        const API = window.location.origin;
+        let TOKEN = localStorage.getItem('bh_token');
+        let REFRESH = localStorage.getItem('bh_refresh');
+        let ROLE = localStorage.getItem('bh_role');
+        let UNAME = localStorage.getItem('bh_uname');
+        let FNAME = localStorage.getItem('bh_fname');
+        let productsCache = null;
 
-    async function doLogin() {
-        const user = document.getElementById('inUser').value.trim();
-        const pass = document.getElementById('inPass').value;
-        const btn = document.getElementById('btnLogin');
-        
-        setLoading(btn, true, 'Авторизация...');
-        clearErr();
+        document.addEventListener('DOMContentLoaded', init);
 
-        try {
-            const r = await fetch(`${API}/api/auth/login/`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({username: user, password: pass})
-            });
-            const d = await r.json();
-            
-            if (r.ok) {
-                TOKEN = d.access;
-                REFRESH = d.refresh;
-                ROLE = d.role;
-                UNAME = d.username;
-                FNAME = d.fullname;
-                
-                localStorage.setItem('bh_token', TOKEN);
-                localStorage.setItem('bh_refresh', REFRESH);
-                localStorage.setItem('bh_role', ROLE);
-                localStorage.setItem('bh_uname', UNAME);
-                localStorage.setItem('bh_fname', FNAME);
-                
-                toast('Авторизация успешна', 'ok');
-                document.getElementById('inUser').value = '';
-                document.getElementById('inPass').value = '';
-                
+        function init() {
+            console.log('🚀 Bahandi APP инициализирована');
+            if (TOKEN && ROLE) {
                 showUserChip();
                 routeToPanel();
             } else {
-                let msg = 'Неверный логин или пароль.';
-                if (d.detail) msg = d.detail;
-                if (d.non_field_errors) msg = d.non_field_errors.join(' ');
-                showErr(msg);
-            }
-        } catch(e) {
-            console.error(e);
-            showErr('Ошибка связи с сервером.');
-        } finally {
-            setLoading(btn, false, 'Войти');
-        }
-    }
-    
-    function logout() {
-        localStorage.removeItem('bh_token');
-        localStorage.removeItem('bh_refresh');
-        localStorage.removeItem('bh_role');
-        localStorage.removeItem('bh_uname');
-        localStorage.removeItem('bh_fname');
-        TOKEN = REFRESH = ROLE = UNAME = FNAME = null;
-        productsCache = null;
-        hideUserChip();
-        show('panelAuth');
-        toast('Сессия завершена', 'warn');
-    }
-
-    function authHeaders() {
-        return {'Authorization': `Bearer ${TOKEN}`};
-    }
-    
-    function authJSON() {
-        return {'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json'};
-    }
-
-    // Auto-refresh token on 401
-    async function authFetch(url, opts = {}) {
-        let r = await fetch(url, opts);
-        if (r.status === 401 && REFRESH) {
-            // Try refresh
-            const rr = await fetch(`${API}/api/auth/token/refresh/`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({refresh: REFRESH})
-            });
-            if (rr.ok) {
-                const rd = await rr.json();
-                TOKEN = rd.access;
-                localStorage.setItem('bh_token', TOKEN);
-                // Retry original request with new token
-                if (opts.headers) {
-                    opts.headers['Authorization'] = `Bearer ${TOKEN}`;
-                }
-                r = await fetch(url, opts);
-            } else {
-                logout();
+                hideUserChip();
+                show('panelAuth');
             }
         }
-        return r;
-    }
 
-    // ╔══════════════════════════════════════════╗
-    // ║          ROUTING                        ║
-    // ╚══════════════════════════════════════════╝
+        // ════════════════════════════════════════════
+        // AUTH
+        // ════════════════════════════════════════════
 
-    function routeToPanel() {
-        if (ROLE === 'worker') {
-            show('panelWorker');
-            loadWorkerData();
-        } else if (ROLE === 'manager') {
-            show('panelManager');
-            loadManagerData();
-        } else if (ROLE === 'admin') {
-            show('panelAdmin');
-            loadAdminData();
-        }
-    }
+        async function doLogin() {
+            const user = document.getElementById('inUser').value.trim();
+            const pass = document.getElementById('inPass').value;
+            const btn = document.getElementById('btnLogin');
 
-    function show(id) {
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        clearErr();
-    }
-    
-    function showUserChip() {
-        const el = document.getElementById('userInfo');
-        el.classList.remove('hide');
-        document.getElementById('chipName').innerText = FNAME || UNAME;
-        const chip = document.getElementById('chipRole');
-        const labels = {worker: 'Сотрудник', manager: 'Менеджер', admin: 'Админ'};
-        chip.innerText = labels[ROLE] || ROLE;
-        chip.className = 'chip chip-' + ROLE;
-    }
-    
-    function hideUserChip() {
-        document.getElementById('userInfo').classList.add('hide');
-    }
+            setLoading(btn, true, 'Авторизация...');
+            clearErr();
 
-    // ╔══════════════════════════════════════════╗
-    // ║          WORKER FLOWS                   ║
-    // ╚══════════════════════════════════════════╝
-
-    async function loadWorkerData() {
-        loadWorkerProfile();
-        loadProducts();
-        loadWorkerHistory();
-    }
-
-    async function loadWorkerProfile() {
-        try {
-            const r = await authFetch(`${API}/api/worker/profile/`, {headers: authHeaders()});
-            if (!r.ok) return;
-            const d = await r.json();
-            
-            document.getElementById('wpName').innerText = `${d.profile.fullname || d.profile.username} — ${d.profile.branch_name || 'Без филиала'}`;
-            document.getElementById('wpTotal').innerText = d.statistics.total_write_offs;
-            document.getElementById('wpApproved').innerText = d.statistics.approved_write_offs;
-            document.getElementById('wpRejected').innerText = d.statistics.rejected_write_offs;
-            document.getElementById('wpAccuracy').innerText = d.statistics.accuracy_rate_percent + '%';
-            
-            // Badges
-            const bl = document.getElementById('wpBadges');
-            bl.innerHTML = '';
-            if (d.badges && d.badges.length > 0) {
-                d.badges.forEach(b => {
-                    bl.innerHTML += `<span class="badge-item">🏆 ${b.badge_name}</span>`;
+            try {
+                const r = await fetch(`${API}/api/auth/login/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
                 });
+                const d = await r.json();
+
+                if (r.ok) {
+                    TOKEN = d.access;
+                    REFRESH = d.refresh;
+                    ROLE = d.role;
+                    UNAME = d.username;
+                    FNAME = d.fullname;
+
+                    localStorage.setItem('bh_token', TOKEN);
+                    localStorage.setItem('bh_refresh', REFRESH);
+                    localStorage.setItem('bh_role', ROLE);
+                    localStorage.setItem('bh_uname', UNAME);
+                    localStorage.setItem('bh_fname', FNAME);
+
+                    toast('Авторизация успешна', 'ok');
+                    document.getElementById('inUser').value = '';
+                    document.getElementById('inPass').value = '';
+
+                    showUserChip();
+                    routeToPanel();
+                } else {
+                    let msg = 'Неверный логин или пароль.';
+                    if (d.detail) msg = d.detail;
+                    if (d.non_field_errors) msg = d.non_field_errors.join(' ');
+                    showErr(msg);
+                }
+            } catch (e) {
+                console.error(e);
+                showErr('Ошибка связи с сервером.');
+            } finally {
+                setLoading(btn, false, 'Войти');
             }
-            
-            // AI tips
-            if (d.ai_recommendations) {
-                const tips = d.ai_recommendations;
-                let text = '';
-                if (typeof tips === 'string') { text = tips; }
-                else if (tips.tips) { text = Array.isArray(tips.tips) ? tips.tips.join('\n') : tips.tips; }
-                else if (tips.recommendation) { text = tips.recommendation; }
-                else { text = JSON.stringify(tips); }
-                
-                if (text) {
-                    document.getElementById('wpTipsText').innerText = text;
-                    document.getElementById('wpAiTips').classList.remove('hide');
+        }
+
+        function logout() {
+            localStorage.removeItem('bh_token');
+            localStorage.removeItem('bh_refresh');
+            localStorage.removeItem('bh_role');
+            localStorage.removeItem('bh_uname');
+            localStorage.removeItem('bh_fname');
+            TOKEN = REFRESH = ROLE = UNAME = FNAME = null;
+            productsCache = null;
+            hideUserChip();
+            show('panelAuth');
+            toast('Сессия завершена', 'warn');
+        }
+
+        function authHeaders() {
+            return { 'Authorization': `Bearer ${TOKEN}` };
+        }
+
+        function authJSON() {
+            return { 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json' };
+        }
+
+        async function authFetch(url, opts = {}) {
+            let r = await fetch(url, opts);
+            if (r.status === 401 && REFRESH) {
+                try {
+                    const rr = await fetch(`${API}/api/auth/token/refresh/`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ refresh: REFRESH })
+                    });
+                    if (rr.ok) {
+                        const rd = await rr.json();
+                        TOKEN = rd.access;
+                        localStorage.setItem('bh_token', TOKEN);
+                        if (opts.headers) {
+                            opts.headers['Authorization'] = `Bearer ${TOKEN}`;
+                        }
+                        r = await fetch(url, opts);
+                    } else {
+                        logout();
+                    }
+                } catch (e) {
+                    console.error('Refresh error:', e);
                 }
             }
-        } catch(e) {
-            console.error('Profile load error:', e);
+            return r;
         }
-    }
 
-    async function loadProducts() {
-        if (productsCache) {
-            fillProductSelect(productsCache);
-            return;
-        }
-        // Products aren't a separate endpoint, we'll fill from the write-off create form
-        // Use a simple approach: fetch from the seed data through a test endpoint
-        // Since we don't have a dedicated /api/products/ endpoint, we'll hardcode known products
-        // OR better: create the options from the worker profile or just query the DB
-        // Let's try fetching products through worker profile data for now
-        try {
-            // The products are stored in the DB. Since there's no dedicated list endpoint,
-            // let's create a workaround by adding a quick products list view.
-            // For now, we'll use a fetch that returns products if the endpoint exists.
-            const r = await authFetch(`${API}/api/products/`, {headers: authHeaders()});
-            if (r.ok) {
-                productsCache = await r.json();
-                fillProductSelect(productsCache);
+        // ════════════════════════════════════════════
+        // ROUTING
+        // ════════════════════════════════════════════
+
+        function routeToPanel() {
+            if (ROLE === 'worker') {
+                show('panelWorker');
+                loadWorkerData();
+            } else if (ROLE === 'manager') {
+                show('panelManager');
+                loadManagerData();
+            } else if (ROLE === 'admin') {
+                show('panelAdmin');
+                loadAdminData();
             }
-        } catch(e) {
-            // Fallback: won't fill products from network
-            console.warn('Products endpoint not available, using manual entry');
         }
-    }
-    
-    function fillProductSelect(products) {
-        const sel = document.getElementById('woProduct');
-        sel.innerHTML = '<option value="">Выберите продукт...</option>';
-        products.forEach(p => {
-            const opt = document.createElement('option');
-            opt.value = p.id;
-            opt.innerText = `${p.name} (${p.sku}) — ${p.unit_price}₸/${p.unit_type === 'piece' ? 'шт' : 'кг'}`;
-            sel.appendChild(opt);
-        });
-    }
 
-    async function createWriteOff() {
-        const btn = document.getElementById('btnWo');
-        const product = document.getElementById('woProduct').value;
-        const qty = document.getElementById('woQty').value;
-        const reason = document.getElementById('woReason').value;
-        const photo = document.getElementById('woPhoto').files[0];
-        
-        if (!product || !qty || !reason) {
-            toast('Заполните все обязательные поля', 'err');
-            return;
+        function show(id) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            clearErr();
         }
-        
-        setLoading(btn, true, 'Отправка...');
-        
-        const fd = new FormData();
-        fd.append('product', product);
-        fd.append('quantity', qty);
-        fd.append('reason', reason);
-        if (photo) fd.append('photo', photo);
-        
-        try {
-            const r = await authFetch(`${API}/api/worker/write-off/create/`, {
-                method: 'POST',
-                headers: authHeaders(),
-                body: fd
-            });
-            const d = await r.json();
-            
-            if (r.status === 201) {
-                toast('Списание создано', 'ok');
-                document.getElementById('woForm').reset();
-                document.getElementById('woFileName').classList.add('hide');
-                loadWorkerHistory();
-                loadWorkerProfile();
-            } else {
-                toast(d.error || 'Ошибка при создании', 'err');
-            }
-        } catch(e) {
-            console.error(e);
-            toast('Ошибка соединения', 'err');
-        } finally {
-            setLoading(btn, false, 'Отправить списание');
-        }
-    }
 
-    async function loadWorkerHistory() {
-        const container = document.getElementById('workerHistory');
-        container.innerHTML = '<div class="empty">Загрузка...</div>';
-        
-        try {
-            // Worker sees their own write-offs through profile endpoint or manager list
-            // Since the current API doesn't have a separate "my write-offs" endpoint,
-            // we'll show an empty state initially or fetch from manager endpoint if accessible
-            // For now, we show data from profile stats
-            const r = await authFetch(`${API}/api/worker/profile/`, {headers: authHeaders()});
-            if (r.ok) {
+        function showUserChip() {
+            const el = document.getElementById('userInfo');
+            el.classList.remove('hide');
+            document.getElementById('chipName').innerText = FNAME || UNAME;
+            const chip = document.getElementById('chipRole');
+            const labels = { worker: 'Сотрудник', manager: 'Менеджер', admin: 'Админ' };
+            chip.innerText = labels[ROLE] || ROLE;
+            chip.className = 'chip chip-' + ROLE;
+        }
+
+        function hideUserChip() {
+            document.getElementById('userInfo').classList.add('hide');
+        }
+
+        // ════════════════════════════════════════════
+        // WORKER FLOWS
+        // ════════════════════════════════════════════
+
+        async function loadWorkerData() {
+            loadWorkerProfile();
+            loadProducts();
+            loadWorkerHistory();
+        }
+
+        async function loadWorkerProfile() {
+            try {
+                const r = await authFetch(`${API}/api/worker/profile/`, { headers: authHeaders() });
+                if (!r.ok) return;
                 const d = await r.json();
-                const total = d.statistics.total_write_offs;
-                if (total === 0) {
-                    container.innerHTML = '<div class="empty">Ещё нет списаний</div>';
+
+                document.getElementById('wpName').innerText = `${d.profile.fullname || d.profile.username} — ${d.profile.branch_name || 'Без филиала'}`;
+                document.getElementById('wpTotal').innerText = d.statistics.total_write_offs;
+                document.getElementById('wpApproved').innerText = d.statistics.approved_write_offs;
+                document.getElementById('wpRejected').innerText = d.statistics.rejected_write_offs;
+                document.getElementById('wpAccuracy').innerText = d.statistics.accuracy_rate_percent + '%';
+
+                const bl = document.getElementById('wpBadges');
+                bl.innerHTML = '';
+                if (d.badges && d.badges.length > 0) {
+                    d.badges.forEach(b => {
+                        bl.innerHTML += `<span class="badge-item">🏆 ${b.badge_name}</span>`;
+                    });
+                }
+
+                if (d.ai_recommendations) {
+                    const tips = d.ai_recommendations;
+                    let text = '';
+                    if (typeof tips === 'string') { text = tips; }
+                    else if (tips.tips) { text = Array.isArray(tips.tips) ? tips.tips.join('\n') : tips.tips; }
+                    else if (tips.recommendation) { text = tips.recommendation; }
+                    else { text = JSON.stringify(tips); }
+
+                    if (text) {
+                        document.getElementById('wpTipsText').innerText = text;
+                        document.getElementById('wpAiTips').classList.remove('hide');
+                    }
+                }
+            } catch (e) {
+                console.error('Profile load error:', e);
+            }
+        }
+
+        // ════════════════════════════════════════════
+        // PRODUCTS LOADING - FIXED
+        // ════════════════════════════════════════════
+
+        async function loadProducts() {
+            console.log('🔄 Начинаем загрузку продуктов...');
+            const sel = document.getElementById('woProduct');
+            const debugContent = document.getElementById('productDebugContent');
+
+            debugContent.textContent = '⏳ Загрузка продуктов с сервера...';
+
+            if (productsCache && productsCache.length > 0) {
+                console.log('✅ Используем кеш:', productsCache.length, 'продуктов');
+                fillProductSelect(productsCache);
+                debugContent.textContent = `✅ Загружено из кеша: ${productsCache.length} продуктов`;
+                return;
+            }
+
+            sel.innerHTML = '<option value="">⏳ Загрузка...</option>';
+            sel.disabled = true;
+
+            try {
+                const url = `${API}/api/products/`;
+                console.log('📡 Запрос к API:', url);
+
+                const r = await authFetch(url, { headers: authHeaders() });
+                console.log('📊 Статус ответа:', r.status);
+
+                if (r.ok) {
+                    productsCache = await r.json();
+                    console.log('✅ Получено продуктов:', productsCache.length);
+                    console.log('📦 Данные:', productsCache);
+
+                    if (productsCache.length === 0) {
+                        debugContent.textContent = '⚠️ API вернул 0 продуктов. Добавьте продукты в админке.';
+                        sel.innerHTML = '<option value="">❌ Нет продуктов в базе</option>';
+                        toast('В базе нет продуктов. Добавьте их через админку.', 'warn');
+                    } else {
+                        debugContent.textContent = `✅ Загружено ${productsCache.length} продуктов`;
+                        fillProductSelect(productsCache);
+                        toast(`Загружено ${productsCache.length} продуктов`, 'ok');
+                    }
                 } else {
-                    container.innerHTML = `
+                    const errorText = await r.text();
+                    console.error('❌ Ошибка API:', r.status, errorText);
+                    debugContent.textContent = `❌ Ошибка ${r.status}: ${errorText.substring(0, 100)}`;
+                    sel.innerHTML = `<option value="">❌ Ошибка загрузки (${r.status})</option>`;
+
+                    if (r.status === 401) {
+                        toast('Сессия истекла. Перелогиньтесь.', 'err');
+                    } else {
+                        toast(`Ошибка загрузки продуктов: ${r.status}`, 'err');
+                    }
+                }
+            } catch (e) {
+                console.error('💥 Критическая ошибка:', e);
+                debugContent.textContent = `💥 Ошибка: ${e.message}`;
+                sel.innerHTML = '<option value="">❌ Ошибка соединения</option>';
+                toast('Не удалось загрузить продукты', 'err');
+            } finally {
+                sel.disabled = false;
+                console.log('🏁 Загрузка продуктов завершена');
+            }
+        }
+
+        function fillProductSelect(products) {
+            const sel = document.getElementById('woProduct');
+            if (!products || products.length === 0) {
+                sel.innerHTML = '<option value="">Нет доступных продуктов</option>';
+                return;
+            }
+
+            sel.innerHTML = '<option value="">Выберите продукт...</option>';
+            products.forEach(p => {
+                const unit = p.unit_type === 'piece' ? 'шт' : 'кг';
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                const price = Number(p.unit_price).toLocaleString('ru-RU');
+                opt.innerText = `${p.name} — ${price}₸/${unit}`;
+                opt.dataset.sku = p.sku;
+                opt.dataset.unitType = p.unit_type;
+                sel.appendChild(opt);
+            });
+
+            console.log(`✅ Заполнено ${products.length} опций в select`);
+        }
+
+        function onProductChange(sel) {
+            const opt = sel.options[sel.selectedIndex];
+            const unitEl = document.getElementById('woQtyUnit');
+            if (opt && opt.dataset.unitType) {
+                const unit = opt.dataset.unitType === 'piece' ? '(шт)' : '(кг)';
+                unitEl.innerText = unit;
+                const qtyInput = document.getElementById('woQty');
+                if (opt.dataset.unitType === 'piece') {
+                    qtyInput.step = '1';
+                    qtyInput.placeholder = '5';
+                } else {
+                    qtyInput.step = '0.001';
+                    qtyInput.placeholder = '2.500';
+                }
+            } else {
+                unitEl.innerText = '';
+            }
+        }
+
+        async function createWriteOff() {
+            const btn = document.getElementById('btnWo');
+            const product = document.getElementById('woProduct').value;
+            const qty = document.getElementById('woQty').value;
+            const reason = document.getElementById('woReason').value;
+            const photo = document.getElementById('woPhoto').files[0];
+
+            if (!product || !qty || !reason) {
+                toast('Заполните все обязательные поля', 'err');
+                return;
+            }
+
+            setLoading(btn, true, 'Отправка...');
+
+            const fd = new FormData();
+            fd.append('product', product);
+            fd.append('quantity', qty);
+            fd.append('reason', reason);
+            if (photo) fd.append('photo', photo);
+
+            try {
+                const r = await authFetch(`${API}/api/worker/write-off/create/`, {
+                    method: 'POST',
+                    headers: authHeaders(),
+                    body: fd
+                });
+                const d = await r.json();
+
+                if (r.status === 201) {
+                    toast('Списание создано', 'ok');
+                    document.getElementById('woForm').reset();
+                    document.getElementById('woFileName').classList.add('hide');
+                    loadWorkerHistory();
+                    loadWorkerProfile();
+                } else {
+                    toast(d.error || 'Ошибка при создании', 'err');
+                }
+            } catch (e) {
+                console.error(e);
+                toast('Ошибка соединения', 'err');
+            } finally {
+                setLoading(btn, false, 'Отправить списание');
+            }
+        }
+
+        async function loadWorkerHistory() {
+            const container = document.getElementById('workerHistory');
+            container.innerHTML = '<div class="empty">Загрузка...</div>';
+
+            try {
+                const r = await authFetch(`${API}/api/worker/profile/`, { headers: authHeaders() });
+                if (r.ok) {
+                    const d = await r.json();
+                    const total = d.statistics.total_write_offs;
+                    if (total === 0) {
+                        container.innerHTML = '<div class="empty">Ещё нет списаний</div>';
+                    } else {
+                        container.innerHTML = `
                         <div class="card text-c">
                             <div style="font-size:2rem;margin-bottom:.3rem">📋</div>
                             <div style="font-size:.9rem;color:var(--text-2)">
@@ -716,84 +1447,85 @@
                                 На проверке: <b style="color:var(--amber)">${total - d.statistics.approved_write_offs - d.statistics.rejected_write_offs}</b>
                             </div>
                         </div>`;
+                    }
                 }
-            }
-        } catch(e) {
-            container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка загрузки</div>';
-        }
-    }
-
-    // ╔══════════════════════════════════════════╗
-    // ║          MANAGER FLOWS                  ║
-    // ╚══════════════════════════════════════════╝
-
-    async function loadManagerData() {
-        loadPendingRequests();
-        loadSuppliers();
-        loadDashboard('dashboardContent');
-        loadHeatmap('heatmapContent');
-    }
-
-    async function loadPendingRequests() {
-        const container = document.getElementById('mgrRequestsList');
-        container.innerHTML = '<div class="empty">Загрузка заявок...</div>';
-        
-        try {
-            const r = await authFetch(`${API}/api/manager/requests/`, {headers: authHeaders()});
-            if (!r.ok) {
+            } catch (e) {
                 container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка загрузки</div>';
-                return;
             }
-            const data = await r.json();
-            container.innerHTML = '';
-            
-            if (data.length === 0) {
-                container.innerHTML = `
+        }
+
+        // ════════════════════════════════════════════
+        // MANAGER FLOWS
+        // ════════════════════════════════════════════
+
+        async function loadManagerData() {
+            loadPendingRequests();
+            loadSuppliers();
+            loadDashboard('dashboardContent');
+            loadHeatmap('heatmapContent');
+        }
+
+        async function loadPendingRequests() {
+            const container = document.getElementById('mgrRequestsList');
+            container.innerHTML = '<div class="empty">Загрузка заявок...</div>';
+
+            try {
+                const r = await authFetch(`${API}/api/manager/requests/`, { headers: authHeaders() });
+                if (!r.ok) {
+                    container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка загрузки</div>';
+                    return;
+                }
+                const data = await r.json();
+                container.innerHTML = '';
+
+                if (data.length === 0) {
+                    container.innerHTML = `
                     <div class="card text-c" style="padding:2rem">
                         <div style="font-size:2.5rem;margin-bottom:.4rem">✅</div>
                         <div style="color:var(--text-2)">Все заявки обработаны</div>
                     </div>`;
-                return;
+                    return;
+                }
+
+                data.forEach(wo => {
+                    container.appendChild(buildReviewCard(wo));
+                });
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка соединения</div>';
             }
-            
-            data.forEach(wo => {
-                container.appendChild(buildReviewCard(wo));
-            });
-        } catch(e) {
-            console.error(e);
-            container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка соединения</div>';
         }
-    }
-    
-    function buildReviewCard(wo) {
-        const el = document.createElement('div');
-        el.className = 'item review-card';
-        el.id = `wo-card-${wo.id}`;
-        
-        const date = new Date(wo.created_at);
-        const dateStr = date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
-        
-        const reasonLabels = {
-            expiration: 'Истёк срок годности',
-            spoiled: 'Испортился',
-            cooking_error: 'Ошибка приготовления',
-            supplier_defect: 'Брак поставщика',
-            other: 'Другое'
-        };
-        
-        const cost = (parseFloat(wo.quantity) * parseFloat(wo.product_details?.unit_price || 0)).toFixed(0);
-        
-        let photoHtml = '';
-        if (wo.photo) {
-            let photoUrl = wo.photo;
-            if (photoUrl && !photoUrl.startsWith('http') && !photoUrl.startsWith('/')) photoUrl = '/' + photoUrl;
-            photoHtml = `
+
+        function buildReviewCard(wo) {
+            const el = document.createElement('div');
+            el.className = 'item review-card';
+            el.id = `wo-card-${wo.id}`;
+
+            const date = new Date(wo.created_at);
+            const dateStr = date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+            const reasonLabels = {
+                expiration: 'Просрочка',
+                spoiled: 'Испорчен',
+                damaged: 'Поврежден',
+                cooking_error: 'Ошибка приготовления',
+                supplier_defect: 'Брак поставщика',
+                other: 'Другое'
+            };
+
+            const cost = (parseFloat(wo.quantity) * parseFloat(wo.product_details?.unit_price || 0)).toFixed(0);
+
+            let photoHtml = '';
+            if (wo.photo) {
+                let photoUrl = wo.photo;
+                if (photoUrl && !photoUrl.startsWith('http') && !photoUrl.startsWith('/')) photoUrl = '/' + photoUrl;
+                photoHtml = `
                 <div class="photo-thumb" onclick="openLB('${photoUrl}')">
                     <img src="${photoUrl}" alt="Фото списания">
                 </div>`;
-        }
-        
-        el.innerHTML = `
+            }
+
+            el.innerHTML = `
             <div class="item-meta">
                 <span>${dateStr}</span>
                 <span class="badge badge-pending">На проверке</span>
@@ -815,54 +1547,53 @@
                 </button>
             </div>
         `;
-        return el;
-    }
+            return el;
+        }
 
-    async function reviewWO(id, action, cardEl) {
-        // Show loader
-        const overlay = document.createElement('div');
-        overlay.className = 'loading-overlay';
-        overlay.innerHTML = `<div class="spinner"></div><div class="mt-1">${action === 'approve' ? 'Одобрение...' : 'Отклонение...'}</div>`;
-        cardEl.style.position = 'relative';
-        cardEl.appendChild(overlay);
-        
-        try {
-            const r = await authFetch(`${API}/api/manager/requests/${id}/review/`, {
-                method: 'PATCH',
-                headers: authJSON(),
-                body: JSON.stringify({action})
-            });
-            const d = await r.json();
-            
-            if (r.ok) {
-                toast(action === 'approve' ? 'Заявка одобрена' : 'Заявка отклонена', 'ok');
-                loadPendingRequests();
-            } else {
-                toast(d.error || 'Ошибка обработки', 'err');
+        async function reviewWO(id, action, cardEl) {
+            const overlay = document.createElement('div');
+            overlay.className = 'loading-overlay';
+            overlay.innerHTML = `<div class="spinner"></div><div class="mt-1">${action === 'approve' ? 'Одобрение...' : 'Отклонение...'}</div>`;
+            cardEl.style.position = 'relative';
+            cardEl.appendChild(overlay);
+
+            try {
+                const r = await authFetch(`${API}/api/manager/requests/${id}/review/`, {
+                    method: 'PATCH',
+                    headers: authJSON(),
+                    body: JSON.stringify({ action })
+                });
+                const d = await r.json();
+
+                if (r.ok) {
+                    toast(action === 'approve' ? 'Заявка одобрена' : 'Заявка отклонена', 'ok');
+                    loadPendingRequests();
+                } else {
+                    toast(d.error || 'Ошибка обработки', 'err');
+                    overlay.remove();
+                }
+            } catch (e) {
+                console.error(e);
+                toast('Ошибка соединения', 'err');
                 overlay.remove();
             }
-        } catch(e) {
-            console.error(e);
-            toast('Ошибка соединения', 'err');
-            overlay.remove();
         }
-    }
 
-    async function loadSuppliers() {
-        const container = document.getElementById('suppliersTable');
-        container.innerHTML = '<div class="empty">Загрузка...</div>';
-        
-        try {
-            const r = await authFetch(`${API}/api/manager/suppliers/`, {headers: authHeaders()});
-            if (!r.ok) return;
-            const data = await r.json();
-            
-            if (data.length === 0) {
-                container.innerHTML = '<div class="empty">Нет данных о поставщиках</div>';
-                return;
-            }
-            
-            let html = `<table class="s-table">
+        async function loadSuppliers() {
+            const container = document.getElementById('suppliersTable');
+            container.innerHTML = '<div class="empty">Загрузка...</div>';
+
+            try {
+                const r = await authFetch(`${API}/api/manager/suppliers/`, { headers: authHeaders() });
+                if (!r.ok) return;
+                const data = await r.json();
+
+                if (data.length === 0) {
+                    container.innerHTML = '<div class="empty">Нет данных о поставщиках</div>';
+                    return;
+                }
+
+                let html = `<table class="s-table">
                 <thead><tr>
                     <th>Поставщик</th>
                     <th>Рейтинг</th>
@@ -870,73 +1601,73 @@
                     <th>Жалобы</th>
                     <th>Потери</th>
                 </tr></thead><tbody>`;
-            
-            data.forEach(s => {
-                const ratingClass = s.ai_rating >= 4.5 ? 'good' : (s.ai_rating >= 3.5 ? 'mid' : 'bad');
-                html += `<tr>
+
+                data.forEach(s => {
+                    const ratingClass = s.ai_rating >= 4.5 ? 'good' : (s.ai_rating >= 3.5 ? 'mid' : 'bad');
+                    html += `<tr>
                     <td><b>${s.name}</b><br><span style="font-size:.7rem;color:var(--text-3)">${s.contacts || ''}</span></td>
                     <td><span class="s-rating ${ratingClass}">${s.ai_rating}</span></td>
                     <td>${s.volume}</td>
                     <td>${s.complaints > 0 ? `<span style="color:var(--red)">${s.complaints}</span>` : '0'}</td>
                     <td style="font-family:var(--mono)">${formatMoney(s.losses_tenge)}</td>
                 </tr>`;
-            });
-            
-            html += '</tbody></table>';
-            container.innerHTML = html;
-        } catch(e) {
-            console.error(e);
-            container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка загрузки</div>';
-        }
-    }
+                });
 
-    // ╔══════════════════════════════════════════╗
-    // ║          ADMIN FLOWS                    ║
-    // ╚══════════════════════════════════════════╝
-
-    async function loadAdminData() {
-        loadDashboard('admDashContent');
-        loadHeatmap('admHeatContent');
-    }
-
-    // ╔══════════════════════════════════════════╗
-    // ║          ANALYTICS (shared)             ║
-    // ╚══════════════════════════════════════════╝
-
-    async function loadDashboard(containerId) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = '<div class="empty">Загрузка аналитики...</div>';
-        
-        try {
-            const r = await authFetch(`${API}/api/analytics/dashboard/`, {headers: authHeaders()});
-            if (!r.ok) {
-                container.innerHTML = '<div class="empty" style="color:var(--red)">Нет доступа к аналитике</div>';
-                return;
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка загрузки</div>';
             }
-            const d = await r.json();
-            
-            let branchHtml = '';
-            if (d.losses_by_branch && d.losses_by_branch.length > 0) {
-                branchHtml = d.losses_by_branch.map(b => 
-                    `<div style="display:flex;justify-content:space-between;font-size:.82rem;padding:.3rem 0;border-bottom:1px solid var(--border)">
+        }
+
+        // ════════════════════════════════════════════
+        // ADMIN FLOWS
+        // ════════════════════════════════════════════
+
+        async function loadAdminData() {
+            loadDashboard('admDashContent');
+            loadHeatmap('admHeatContent');
+        }
+
+        // ════════════════════════════════════════════
+        // ANALYTICS (shared)
+        // ════════════════════════════════════════════
+
+        async function loadDashboard(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '<div class="empty">Загрузка аналитики...</div>';
+
+            try {
+                const r = await authFetch(`${API}/api/analytics/dashboard/`, { headers: authHeaders() });
+                if (!r.ok) {
+                    container.innerHTML = '<div class="empty" style="color:var(--red)">Нет доступа к аналитике</div>';
+                    return;
+                }
+                const d = await r.json();
+
+                let branchHtml = '';
+                if (d.losses_by_branch && d.losses_by_branch.length > 0) {
+                    branchHtml = d.losses_by_branch.map(b =>
+                        `<div style="display:flex;justify-content:space-between;font-size:.82rem;padding:.3rem 0;border-bottom:1px solid var(--border)">
                         <span>${b.branch_name} <span style="color:var(--text-3)">(${b.city})</span></span>
                         <span style="font-family:var(--mono);font-weight:600">${formatMoney(b.losses_tenge)}</span>
                     </div>`
-                ).join('');
-            }
-            
-            let empHtml = '';
-            if (d.losses_by_employee && d.losses_by_employee.length > 0) {
-                empHtml = d.losses_by_employee.map(e => 
-                    `<div style="display:flex;justify-content:space-between;font-size:.82rem;padding:.3rem 0;border-bottom:1px solid var(--border)">
+                    ).join('');
+                }
+
+                let empHtml = '';
+                if (d.losses_by_employee && d.losses_by_employee.length > 0) {
+                    empHtml = d.losses_by_employee.map(e =>
+                        `<div style="display:flex;justify-content:space-between;font-size:.82rem;padding:.3rem 0;border-bottom:1px solid var(--border)">
                         <span>${e.fullname || e.username}</span>
                         <span style="font-family:var(--mono);font-weight:600">${formatMoney(e.losses_tenge)}</span>
                     </div>`
-                ).join('');
-            }
-            
-            container.innerHTML = `
+                    ).join('');
+                }
+
+                container.innerHTML = `
                 <div class="stats">
                     <div class="stat">
                         <div class="stat-val" style="color:var(--red)">${formatMoney(d.total_losses_tenge)}</div>
@@ -971,30 +1702,30 @@
                 ${branchHtml ? `<div class="card mt-2"><h3>Потери по филиалам</h3>${branchHtml}</div>` : ''}
                 ${empHtml ? `<div class="card mt-1"><h3>Потери по сотрудникам</h3>${empHtml}</div>` : ''}
             `;
-        } catch(e) {
-            console.error(e);
-            container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка загрузки</div>';
-        }
-    }
-
-    async function loadHeatmap(containerId) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = '<div class="empty">Загрузка...</div>';
-        
-        try {
-            const r = await authFetch(`${API}/api/analytics/heatmap/`, {headers: authHeaders()});
-            if (!r.ok) return;
-            const data = await r.json();
-            container.innerHTML = '';
-            
-            if (data.length === 0) {
-                container.innerHTML = '<div class="empty">Нет данных</div>';
-                return;
+            } catch (e) {
+                console.error(e);
+                container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка загрузки</div>';
             }
-            
-            data.forEach(h => {
-                container.innerHTML += `
+        }
+
+        async function loadHeatmap(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '<div class="empty">Загрузка...</div>';
+
+            try {
+                const r = await authFetch(`${API}/api/analytics/heatmap/`, { headers: authHeaders() });
+                if (!r.ok) return;
+                const data = await r.json();
+                container.innerHTML = '';
+
+                if (data.length === 0) {
+                    container.innerHTML = '<div class="empty">Нет данных</div>';
+                    return;
+                }
+
+                data.forEach(h => {
+                    container.innerHTML += `
                     <div class="heat-item">
                         <div class="heat-dot ${h.status_color}"></div>
                         <div class="heat-info">
@@ -1003,28 +1734,28 @@
                         </div>
                         <div class="heat-val" style="color:var(--${h.status_color === 'green' ? 'green' : h.status_color === 'yellow' ? 'amber' : 'red'})">${formatMoney(h.total_losses_tenge)}</div>
                     </div>`;
-            });
-        } catch(e) {
-            console.error(e);
-        }
-    }
-
-    async function exportSheets() {
-        const btn = document.getElementById('btnExport') || document.getElementById('btnAdmExport');
-        if (btn) setLoading(btn, true, 'Экспорт...');
-        
-        try {
-            const r = await authFetch(`${API}/api/analytics/export/google-sheets/`, {headers: authHeaders()});
-            if (!r.ok) {
-                toast('Ошибка экспорта', 'err');
-                return;
+                });
+            } catch (e) {
+                console.error(e);
             }
-            const d = await r.json();
-            toast(`Экспортировано ${d.rows_count} записей`, 'ok');
-            
-            const resultEl = document.getElementById('exportResult');
-            if (resultEl) {
-                resultEl.innerHTML = `
+        }
+
+        async function exportSheets() {
+            const btn = document.getElementById('btnExport') || document.getElementById('btnAdmExport');
+            if (btn) setLoading(btn, true, 'Экспорт...');
+
+            try {
+                const r = await authFetch(`${API}/api/analytics/export/google-sheets/`, { headers: authHeaders() });
+                if (!r.ok) {
+                    toast('Ошибка экспорта', 'err');
+                    return;
+                }
+                const d = await r.json();
+                toast(`Экспортировано ${d.rows_count} записей`, 'ok');
+
+                const resultEl = document.getElementById('exportResult');
+                if (resultEl) {
+                    resultEl.innerHTML = `
                     <div class="card">
                         <h3 style="color:var(--green)">✓ ${d.message}</h3>
                         <div class="item-details mt-1">
@@ -1033,90 +1764,90 @@
                             <div>🕐 ${d.exported_at}</div>
                         </div>
                     </div>`;
+                }
+            } catch (e) {
+                console.error(e);
+                toast('Ошибка соединения', 'err');
+            } finally {
+                if (btn) setLoading(btn, false, '📊 Экспорт в Google Sheets');
             }
-        } catch(e) {
-            console.error(e);
-            toast('Ошибка соединения', 'err');
-        } finally {
-            if (btn) setLoading(btn, false, '📊 Экспорт в Google Sheets');
         }
-    }
 
-    // ╔══════════════════════════════════════════╗
-    // ║          UI HELPERS                     ║
-    // ╚══════════════════════════════════════════╝
+        // ════════════════════════════════════════════
+        // UI HELPERS
+        // ════════════════════════════════════════════
 
-    function switchTab(prefix, tabId, tabEl) {
-        // Deactivate all tabs and content in the same group
-        tabEl.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        tabEl.classList.add('active');
-        
-        const panel = tabEl.closest('.panel');
-        panel.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-    }
+        function switchTab(prefix, tabId, tabEl) {
+            tabEl.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tabEl.classList.add('active');
 
-    function onFile(input, nameId) {
-        const el = document.getElementById(nameId);
-        if (input.files && input.files.length > 0) {
-            el.innerText = `📎 ${input.files[0].name}`;
-            el.classList.remove('hide');
-        } else {
-            el.classList.add('hide');
+            const panel = tabEl.closest('.panel');
+            panel.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
         }
-    }
 
-    function openLB(url) {
-        document.getElementById('lbImg').src = url;
-        document.getElementById('lightbox').classList.add('active');
-    }
-    function closeLB() {
-        document.getElementById('lightbox').classList.remove('active');
-    }
-    
-    function formatMoney(val) {
-        if (val === undefined || val === null) return '0₸';
-        return Number(val).toLocaleString('ru-RU', {maximumFractionDigits: 0}) + '₸';
-    }
-
-    function showErr(msg) {
-        const el = document.getElementById('errBox');
-        el.innerText = msg;
-        el.style.display = 'block';
-    }
-    function clearErr() {
-        const el = document.getElementById('errBox');
-        el.innerText = '';
-        el.style.display = 'none';
-    }
-
-    function setLoading(btn, on, text) {
-        if (on) {
-            btn.disabled = true;
-            btn.dataset.origHtml = btn.innerHTML;
-            btn.innerHTML = `<span class="spinner"></span> <span>${text}</span>`;
-        } else {
-            btn.disabled = false;
-            if (btn.dataset.origHtml) btn.innerHTML = btn.dataset.origHtml;
+        function onFile(input, nameId) {
+            const el = document.getElementById(nameId);
+            if (input.files && input.files.length > 0) {
+                el.innerText = `📎 ${input.files[0].name}`;
+                el.classList.remove('hide');
+            } else {
+                el.classList.add('hide');
+            }
         }
-    }
 
-    function toast(msg, type = 'ok') {
-        const container = document.getElementById('toasts');
-        const el = document.createElement('div');
-        const cls = {ok:'toast-ok', err:'toast-err', warn:'toast-warn'}[type] || 'toast-ok';
-        el.className = `toast ${cls}`;
-        
-        const icons = {ok:'✓', err:'⚠', warn:'ℹ'};
-        el.innerHTML = `<span style="font-size:1rem">${icons[type] || '•'}</span> <span>${msg}</span>`;
-        container.appendChild(el);
-        
-        setTimeout(() => {
-            el.style.opacity = '0';
-            el.style.transition = 'opacity .15s';
-            setTimeout(() => el.remove(), 200);
-        }, 3000);
-    }
+        function openLB(url) {
+            document.getElementById('lbImg').src = url;
+            document.getElementById('lightbox').classList.add('active');
+        }
+        function closeLB() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        function formatMoney(val) {
+            if (val === undefined || val === null) return '0₸';
+            return Number(val).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + '₸';
+        }
+
+        function showErr(msg) {
+            const el = document.getElementById('errBox');
+            el.innerText = msg;
+            el.style.display = 'block';
+        }
+        function clearErr() {
+            const el = document.getElementById('errBox');
+            el.innerText = '';
+            el.style.display = 'none';
+        }
+
+        function setLoading(btn, on, text) {
+            if (on) {
+                btn.disabled = true;
+                btn.dataset.origHtml = btn.innerHTML;
+                btn.innerHTML = `<span class="spinner"></span> <span>${text}</span>`;
+            } else {
+                btn.disabled = false;
+                if (btn.dataset.origHtml) btn.innerHTML = btn.dataset.origHtml;
+            }
+        }
+
+        function toast(msg, type = 'ok') {
+            const container = document.getElementById('toasts');
+            const el = document.createElement('div');
+            const cls = { ok: 'toast-ok', err: 'toast-err', warn: 'toast-warn' }[type] || 'toast-ok';
+            el.className = `toast ${cls}`;
+
+            const icons = { ok: '✓', err: '⚠', warn: 'ℹ' };
+            el.innerHTML = `<span style="font-size:1rem">${icons[type] || '•'}</span> <span>${msg}</span>`;
+            container.appendChild(el);
+
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transition = 'opacity .15s';
+                setTimeout(() => el.remove(), 200);
+            }, 3000);
+        }
     </script>
 </body>
+
 </html>
