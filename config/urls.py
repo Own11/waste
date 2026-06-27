@@ -1,41 +1,37 @@
-"""
-URL configuration for config project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 # pyrefly: ignore [missing-import]
-from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenRefreshView
 from api import views
 
-router = DefaultRouter()
-router.register(r'outlets', views.OutletViewSet, basename='outlet')
-router.register(r'senders', views.SenderUserViewSet, basename='sender')
-router.register(r'write-offs', views.WriteOffRequestViewSet, basename='writeoff')
-router.register(r'requests', views.ReviewRequestViewSet, basename='request')
-
 urlpatterns = [
+    # Serve index.html template from root URL
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
     path('admin/', admin.site.urls),
-    path('api/token/', views.ObtainAuthTokenWithRole.as_view(), name='token_obtain'),
-    path('api/', include(router.urls)),
+    
+    # Auth endpoints
+    path('api/auth/login/', views.CustomTokenObtainPairView.as_view(), name='token_obtain'),
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    # Worker endpoints
+    path('api/worker/profile/', views.WorkerProfileView.as_view(), name='worker_profile'),
+    path('api/worker/write-off/scan/', views.WorkerScanView.as_view(), name='worker_write_off_scan'),
+    path('api/worker/write-off/create/', views.WorkerWriteOffCreateView.as_view(), name='worker_write_off_create'),
+    
+    # Manager endpoints
+    path('api/manager/requests/', views.ManagerRequestsListView.as_view(), name='manager_requests'),
+    path('api/manager/requests/<int:pk>/review/', views.ManagerReviewView.as_view(), name='manager_review'),
+    path('api/manager/supply/check/', views.ManagerSupplyCheckView.as_view(), name='manager_supply_check'),
+    path('api/manager/suppliers/', views.ManagerSuppliersListView.as_view(), name='manager_suppliers'),
+    
+    # Analytics / Executive endpoints
+    path('api/analytics/dashboard/', views.AnalyticsDashboardView.as_view(), name='analytics_dashboard'),
+    path('api/analytics/heatmap/', views.AnalyticsHeatmapView.as_view(), name='analytics_heatmap'),
+    path('api/analytics/export/google-sheets/', views.AnalyticsExportSheetsView.as_view(), name='analytics_export_sheets'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

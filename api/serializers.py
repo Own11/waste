@@ -1,53 +1,62 @@
-# pyrefly: ignore [missing-import]
 from rest_framework import serializers
-from .models import User, Outlet, WriteOffRequest
+from .models import User, Branch, Product, Supplier, Supply, WriteOff, EmployeeBadge
+
+class BranchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Branch
+        fields = ('id', 'name', 'city', 'latitude', 'longitude')
+
 
 class UserSerializer(serializers.ModelSerializer):
+    branch_name = serializers.CharField(source='branch.name', read_only=True)
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'role')
+        fields = ('id', 'username', 'fullname', 'role', 'branch', 'branch_name')
 
 
-class OutletSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Outlet
-        fields = ('id', 'name', 'address')
+        model = Product
+        fields = ('id', 'name', 'sku', 'unit_type', 'unit_price')
 
 
-class WriteOffRequestSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-    outlet_details = OutletSerializer(source='outlet', read_only=True)
-    responsible_user_details = UserSerializer(source='responsible_user', read_only=True)
+class SupplierSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Supplier
+        fields = ('id', 'name', 'contacts', 'ai_rating')
+
+
+class SupplySerializer(serializers.ModelSerializer):
+    supplier_name = serializers.CharField(source='supplier.name', read_only=True)
+    branch_name = serializers.CharField(source='branch.name', read_only=True)
+
+    class Meta:
+        model = Supply
+        fields = ('id', 'supplier', 'supplier_name', 'branch', 'branch_name', 'date', 'photos', 'ai_status_report')
+        read_only_fields = ('ai_status_report',)
+
+
+class WriteOffSerializer(serializers.ModelSerializer):
+    employee_details = UserSerializer(source='employee', read_only=True)
+    branch_details = BranchSerializer(source='branch', read_only=True)
+    product_details = ProductSerializer(source='product', read_only=True)
+    manager_details = UserSerializer(source='manager', read_only=True)
+    reason_display = serializers.CharField(source='get_reason_display', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
-    type_display = serializers.CharField(source='get_type_display', read_only=True)
 
     class Meta:
-        model = WriteOffRequest
+        model = WriteOff
         fields = (
-            'id', 'outlet', 'outlet_details', 'author', 'photo', 
-            'type', 'type_display', 'responsible_user', 'responsible_user_details', 
-            'comment', 'status', 'status_display', 'iiko_act_id', 
-            'created_at', 'updated_at'
+            'id', 'employee', 'employee_details', 'branch', 'branch_details', 
+            'product', 'product_details', 'photo', 'ai_confidence', 
+            'reason', 'reason_display', 'quantity', 'status', 'status_display', 
+            'manager', 'manager_details', 'created_at', 'updated_at'
         )
-        read_only_fields = ('status', 'iiko_act_id', 'created_at', 'updated_at')
+        read_only_fields = ('employee', 'branch', 'ai_confidence', 'status', 'manager', 'created_at', 'updated_at')
 
-    def validate_comment(self, value):
-        if len(value) < 10:
-            raise serializers.ValidationError("Комментарий должен содержать не менее 10 символов.")
-        return value
 
-    def validate(self, attrs):
-        write_off_type = attrs.get('type', 'no_deduction')
-        responsible_user = attrs.get('responsible_user', None)
-
-        if write_off_type == 'with_deduction' and not responsible_user:
-            raise serializers.ValidationError({
-                "responsible_user": "Для списания с удержанием необходимо указать сотрудника."
-            })
-        return attrs
-
-    def create(self, validated_data):
-        request = self.context.get('request')
-        if request and request.user:
-            validated_data['author'] = request.user
-        return super().create(validated_data)
+class EmployeeBadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeBadge
+        fields = ('id', 'badge_name', 'date_received')

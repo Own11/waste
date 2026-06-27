@@ -77,22 +77,33 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+import sys
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.giomzfubnyrmjqnbkbpf',
-        'PASSWORD': '31190124dyus2011',
-        'HOST': 'aws-1-ap-south-1.pooler.supabase.com',
-        'PORT': '6543',
-        'OPTIONS': {
-            'sslmode': 'require',
-        },
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
     }
-}
+elif os.environ.get('USE_POSTGRES') == 'True':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres.giomzfubnyrmjqnbkbpf',
+            'PASSWORD': '31190124dyus2011',
+            'HOST': 'aws-1-ap-south-1.pooler.supabase.com',
+            'PORT': '6543',
+            'OPTIONS': {
+                'sslmode': 'require',
+            },
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -150,7 +161,7 @@ AUTH_USER_MODEL = 'api.User'
 # REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
