@@ -93,7 +93,7 @@ class WriteOff(models.Model):
     employee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='write_offs', verbose_name="Сотрудник")
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='write_offs', verbose_name="Филиал")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='write_offs', verbose_name="Товар")
-    photo = models.ImageField(upload_to='write_offs/', verbose_name="Фотография списания", null=True, blank=True)
+    photo = models.TextField(verbose_name="Фотография списания (base64)", null=True, blank=True)
     ai_confidence = models.FloatField(default=0.0, verbose_name="Вероятность распознавания AI")
     reason = models.CharField(max_length=20, choices=REASON_CHOICES, verbose_name="Причина")
     quantity = models.DecimalField(max_digits=10, decimal_places=3, verbose_name="Количество")
