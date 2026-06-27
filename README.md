@@ -6,7 +6,6 @@ A mobile-first, dark-themed write-off automation system for retail stores with i
 
 ## 🛠 Tech Stack
 - **Backend**: Django 6.0 + Django REST Framework (DRF)
-- **Database**: SQLite
 - **Frontend**: Mobile-first Single Page App (Vanilla HTML5 / CSS3 / JavaScript) with full-screen photo viewer and dynamic forms.
 
 ---

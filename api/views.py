@@ -1,17 +1,20 @@
+# pyrefly: ignore [missing-import]
 from rest_framework import viewsets, permissions, status
+# pyrefly: ignore [missing-import]
 from rest_framework.decorators import action
+# pyrefly: ignore [missing-import]
 from rest_framework.response import Response
+# pyrefly: ignore [missing-import]
 from rest_framework.authtoken.views import ObtainAuthToken
+# pyrefly: ignore [missing-import]
 from rest_framework.authtoken.models import Token
 
 from .models import User, Outlet, WriteOffRequest
 from .serializers import UserSerializer, OutletSerializer, WriteOffRequestSerializer
+# pyrefly: ignore [missing-import]
 from .services import IikoService
 
 class ObtainAuthTokenWithRole(ObtainAuthToken):
-    """
-    Custom auth token view that returns the user's role and details.
-    """
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
@@ -28,43 +31,28 @@ class ObtainAuthTokenWithRole(ObtainAuthToken):
 
 
 class IsSenderPermission(permissions.BasePermission):
-    """
-    Allows access only to users with the 'sender' role.
-    """
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == 'sender'
 
 
 class IsCheckerPermission(permissions.BasePermission):
-    """
-    Allows access only to users with the 'checker' role.
-    """
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role == 'checker'
 
 
 class OutletViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint that allows outlets to be viewed.
-    """
     queryset = Outlet.objects.all().order_by('name')
     serializer_class = OutletSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
 class SenderUserViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API endpoint to list users who are eligible for deduction ('sender' role).
-    """
     queryset = User.objects.filter(role='sender').order_by('username')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
 class WriteOffRequestViewSet(viewsets.ModelViewSet):
-    """
-    API viewset for WriteOffRequest operations.
-    """
     serializer_class = WriteOffRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -88,26 +76,15 @@ class WriteOffRequestViewSet(viewsets.ModelViewSet):
 
 
 class ReviewRequestViewSet(viewsets.ViewSet):
-    """
-    Review endpoints for checkers to manage and process write-off requests.
-    """
     permission_classes = [IsCheckerPermission]
 
     def list(self, request):
-        """
-        GET /api/requests/
-        Returns list of requests filtered by status 'on_review' (На проверке).
-        """
         queryset = WriteOffRequest.objects.filter(status='on_review')
         serializer = WriteOffRequestSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
     @action(detail=True, methods=['post'], url_path='review')
     def review(self, request, pk=None):
-        """
-        POST /api/requests/{id}/review/
-        Accepts action: 'approve' or 'reject'
-        """
         try:
             write_off = WriteOffRequest.objects.get(pk=pk)
         except WriteOffRequest.DoesNotExist:
@@ -127,7 +104,6 @@ class ReviewRequestViewSet(viewsets.ViewSet):
             )
 
         if review_action == 'approve':
-            # Call iiko service
             payload = {
                 "request_id": write_off.id,
                 "outlet_name": write_off.outlet.name,
@@ -142,7 +118,6 @@ class ReviewRequestViewSet(viewsets.ViewSet):
                     write_off.iiko_act_id = iiko_response.get('iiko_act_id')
                     write_off.save()
                 else:
-                    # Optional: handle if mock service fails (not possible in current service mock)
                     return Response(
                         {"detail": "Ошибка интеграции с iiko API."},
                         status=status.HTTP_502_BAD_GATEWAY

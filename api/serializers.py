@@ -1,3 +1,4 @@
+# pyrefly: ignore [missing-import]
 from rest_framework import serializers
 from .models import User, Outlet, WriteOffRequest
 
@@ -36,7 +37,6 @@ class WriteOffRequestSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
-        # Additional custom validation if needed (e.g. checks for responsible user)
         write_off_type = attrs.get('type', 'no_deduction')
         responsible_user = attrs.get('responsible_user', None)
 
@@ -47,7 +47,6 @@ class WriteOffRequestSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        # Author is set in perform_create in view, but let's make sure it's handled
         request = self.context.get('request')
         if request and request.user:
             validated_data['author'] = request.user

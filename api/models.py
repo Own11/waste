@@ -1,3 +1,4 @@
+# pyrefly: ignore [missing-import]
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import MinLengthValidator
