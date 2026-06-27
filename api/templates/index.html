@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bahandi Write-Offs</title>
+    
+    <!-- Google Fonts: Inter for UI, JetBrains Mono for technical details -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Palette: High contrast dark engineering theme */
+            --bg-color: #0f1013;
+            --surface-color: #16181d;
+            --surface-accent: #20232a;
+            --border-color: #2e323d;
+            --border-focus: #4b5563;
+            
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            
+            /* Accents */
+            --primary: #2563eb;
+            --primary-hover: #3b82f6;
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.1);
+            --warning: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.1);
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --transition-speed: 0.15s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-bottom: 2rem;
+        }
+
+        /* Mobile Frame Container */
+        .container {
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .logo {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.05em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-family: var(--font-mono);
+        }
+
+        .badge-role {
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+        }
+        
+        .role-sender {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .role-checker {
+            background-color: var(--warning-bg);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        /* Views management */
+        .view-panel {
+            display: none;
+            flex-direction: column;
+            gap: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .view-panel.active {
+            display: flex;
+        }
+
+        /* Typography & Layout elements */
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Cards & Containers */
+        .card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Forms Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-family: var(--font-ui);
+        }
+
+        .form-control {
+            width: 100%;
+            background-color: var(--surface-accent);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 4px;
+            padding: 0.75rem;
+            font-size: 0.95rem;
+            font-family: var(--font-ui);
+            transition: border-color var(--transition-speed);
+        }
+
+        .form-control:focus {
+            border-color: var(--border-focus);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* File Upload styling */
+        .file-upload-area {
+            border: 1px dashed var(--border-color);
+            background-color: var(--surface-accent);
+            border-radius: 4px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: background var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--border-focus);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-upload-label svg {
+            width: 24px;
+            height: 24px;
+            color: var(--text-muted);
+        }
+
+        .file-name-preview {
+            margin-top: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--success);
+            word-break: break-all;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: opacity var(--transition-speed), background var(--transition-speed);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: #fff;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: #fff;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover:not(:disabled) {
+            background-color: var(--surface-accent);
+        }
+
+        .btn-logout {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+        }
+
+        .btn-logout:hover {
+            color: var(--danger);
+            background-color: var(--danger-bg);
+        }
+
+        /* Form Feedback */
+        .error-message {
+            color: var(--danger);
+            font-size: 0.8rem;
+            margin-top: 0.35rem;
+            display: none;
+        }
+
+        .error-general {
+            background-color: var(--danger-bg);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            padding: 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .char-count {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            font-family: var(--font-mono);
+            display: inline-block;
+        }
+
+        .status-on_review {
+            background-color: var(--warning-bg);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .status-approved {
+            background-color: var(--primary);
+            color: #fff;
+        }
+
+        .status-rejected {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .status-iiko_synced {
+            background-color: var(--success-bg);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        /* Requests Lists */
+        .requests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .request-item {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .request-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-family: var(--font-mono);
+        }
+
+        .request-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .request-comment {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background-color: var(--surface-accent);
+            padding: 0.5rem 0.75rem;
+            border-left: 2px solid var(--border-color);
+            margin: 0.5rem 0;
+            border-radius: 0 4px 4px 0;
+            font-family: var(--font-ui);
+            word-break: break-word;
+        }
+
+        .request-details {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        /* Review Card Specifics */
+        .review-card {
+            border-left: 3px solid var(--warning);
+        }
+
+        .review-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* Photo Thumbnail & Modal */
+        .photo-thumbnail-container {
+            margin-top: 0.75rem;
+            position: relative;
+            cursor: pointer;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            height: 120px;
+            background-color: #000;
+        }
+
+        .photo-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: opacity var(--transition-speed);
+        }
+
+        .photo-thumbnail:hover {
+            opacity: 1;
+        }
+
+        .photo-badge {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.35rem;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Lightbox Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 100%;
+            max-height: 80%;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            line-height: 1;
+        }
+
+        /* System Info Banner */
+        .system-banner {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: auto;
+            padding-top: 2rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border-left-color: #fff;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        .card-loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 16, 19, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            z-index: 10;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+
+        .card-loading-overlay .spinner {
+            width: 24px;
+            height: 24px;
+            border-width: 3px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Utility classes */
+        .hide { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+
+        /* Toast system */
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            width: calc(100% - 2rem);
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-left: 3px solid var(--primary);
+            animation: slideUp var(--transition-speed) ease-out;
+        }
+
+        .toast-success { border-left-color: var(--success); }
+        .toast-danger { border-left-color: var(--danger); }
+        .toast-warning { border-left-color: var(--warning); }
+
+        @keyframes slideUp {
+            from { transform: translateY(1rem); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                BAHANDI<span>.ACT</span>
+            </div>
+            <div id="user-info" class="hide">
+                <div class="user-badge">
+                    <span id="badge-username">user</span>
+                    <span id="badge-role" class="badge-role">sender</span>
+                </div>
+                <button onclick="authLogout()" class="btn-logout">OUT</button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main>
+            
+            <!-- General error feedback -->
+            <div id="general-error" class="error-general"></div>
+
+            <!-- View: Login Form -->
+            <section id="auth-view" class="view-panel active">
+                <div class="card">
+                    <h2 class="text-center mb-2">Вход в систему</h2>
+                    <p class="subtitle text-center">Авторизация для сотрудников и проверяющих</p>
+                    
+                    <form id="auth-form" onsubmit="event.preventDefault(); authLogin();">
+                        <div class="form-group">
+                            <label for="login-username">Логин</label>
+                            <input type="text" id="login-username" class="form-control" placeholder="Например: sender1" required autocomplete="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Пароль</label>
+                            <input type="password" id="login-password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+                        </div>
+                        <button type="submit" id="auth-submit" class="btn btn-primary mt-2">
+                            <span>Войти</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- View: Sender Panel (Employee submitting write-offs) -->
+            <section id="sender-view" class="view-panel">
+                
+                <!-- Submission Form Card -->
+                <div class="card">
+                    <h2>Новое списание</h2>
+                    <p class="subtitle">Заполните данные акта списания</p>
+                    
+                    <form id="write-off-form" onsubmit="event.preventDefault(); submitWriteOff();" enctype="multipart/form-data">
+                        
+                        <!-- Outlet Field -->
+                        <div class="form-group">
+                            <label for="wo-outlet">Торговая точка</label>
+                            <select id="wo-outlet" class="form-control" required>
+                                <option value="">Выберите точку...</option>
+                            </select>
+                            <div id="err-outlet" class="error-message"></div>
+                        </div>
+
+                        <!-- Write-off type -->
+                        <div class="form-group">
+                            <label for="wo-type">Тип списания</label>
+                            <select id="wo-type" class="form-control" required onchange="toggleResponsibleField()">
+                                <option value="no_deduction">Без удержания</option>
+                                <option value="with_deduction">С удержанием</option>
+                            </select>
+                            <div id="err-type" class="error-message"></div>
+                        </div>
+
+                        <!-- Responsible employee for deduction (Dynamically toggled) -->
+                        <div id="responsible-user-group" class="form-group hide">
+                            <label for="wo-responsible">Сотрудник для удержания</label>
+                            <select id="wo-responsible" class="form-control">
+                                <option value="">Выберите сотрудника...</option>
+                            </select>
+                            <div id="err-responsible_user" class="error-message"></div>
+                        </div>
+
+                        <!-- Photo Attachment -->
+                        <div class="form-group">
+                            <label>Фотография списания (обязательно)</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="wo-photo" accept="image/*" required onchange="handleFileChange(this)">
+                                <div class="file-upload-label">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                    <span>Выбрать или сделать снимок</span>
+                                </div>
+                                <div id="photo-preview-name" class="file-name-preview hide"></div>
+                            </div>
+                            <div id="err-photo" class="error-message"></div>
+                        </div>
+
+                        <!-- Comment with client-side character validation -->
+                        <div class="form-group">
+                            <label for="wo-comment">Комментарий (минимум 10 символов)</label>
+                            <textarea id="wo-comment" class="form-control" placeholder="Опишите причину списания..." required oninput="validateCommentLength(this)"></textarea>
+                            <div class="char-count">
+                                <span id="comment-validator-msg">Требуется не менее 10 символов</span>
+                                <span id="comment-char-num">0/10</span>
+                            </div>
+                            <div id="err-comment" class="error-message"></div>
+                        </div>
+
+                        <!-- Submit action -->
+                        <button type="submit" id="wo-submit" class="btn btn-primary mt-2" disabled>
+                            <span>Отправить заявку</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Own History Header -->
+                <div>
+                    <h2>История заявок</h2>
+                    <p class="subtitle">Ваши отправленные списания</p>
+                    <div id="sender-requests-list" class="requests-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- View: Checker Panel (Verification and review) -->
+            <section id="checker-view" class="view-panel">
+                <div>
+                    <h2>Заявки на проверке</h2>
+                    <p class="subtitle">Требующие согласования и выгрузки в iiko</p>
+                    
+                    <div id="checker-requests-list" class="requests-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- System Version Banner -->
+        <footer class="system-banner">
+            BAHANDI-IIKO CONTROL SYSTEM MVP v1.0.0 (SQLITE)
+        </footer>
+    </div>
+
+    <!-- Image Lightbox Modal -->
+    <div id="photo-modal" class="modal" onclick="closeLightbox()">
+        <button class="modal-close" onclick="closeLightbox()">&times;</button>
+        <img id="modal-image" class="modal-content" src="" alt="Детали списания" onclick="event.stopPropagation()">
+    </div>
+
+    <!-- Toast container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Application Script -->
+    <script>
+        // Core application state
+        const API_HOST = window.location.origin;
+        let USER_TOKEN = localStorage.getItem('bahandi_token') || null;
+        let USER_ROLE = localStorage.getItem('bahandi_role') || null;
+        let USER_NAME = localStorage.getItem('bahandi_username') || null;
+
+        // Cached lists
+        let outletsLoaded = false;
+        let sendersLoaded = false;
+
+        // On document load initialize view
+        document.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
+
+        // Initialize state & route to correct panel
+        function initApp() {
+            if (USER_TOKEN) {
+                document.getElementById('user-info').classList.remove('hide');
+                document.getElementById('badge-username').innerText = USER_NAME;
+                
+                const roleBadge = document.getElementById('badge-role');
+                roleBadge.innerText = USER_ROLE === 'sender' ? 'Сотрудник' : 'Проверяющий';
+                roleBadge.className = 'badge-role ' + (USER_ROLE === 'sender' ? 'role-sender' : 'role-checker');
+                
+                showView(USER_ROLE + '-view');
+                
+                if (USER_ROLE === 'sender') {
+                    loadSenderData();
+                } else if (USER_ROLE === 'checker') {
+                    loadCheckerData();
+                }
+            } else {
+                document.getElementById('user-info').classList.add('hide');
+                showView('auth-view');
+            }
+        }
+
+        // View switcher
+        function showView(viewId) {
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(viewId).classList.add('active');
+            clearGeneralError();
+        }
+
+        // --- AUTHENTICATION FLOWS ---
+
+        async function authLogin() {
+            const usernameInput = document.getElementById('login-username');
+            const passwordInput = document.getElementById('login-password');
+            const submitBtn = document.getElementById('auth-submit');
+            
+            setLoading(submitBtn, true, 'Вход...');
+            clearGeneralError();
+
+            try {
+                const response = await fetch(`${API_HOST}/api/token/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: usernameInput.value.trim(),
+                        password: passwordInput.value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('bahandi_token', data.token);
+                    localStorage.setItem('bahandi_role', data.role);
+                    localStorage.setItem('bahandi_username', data.username);
+                    
+                    USER_TOKEN = data.token;
+                    USER_ROLE = data.role;
+                    USER_NAME = data.username;
+                    
+                    showToast('Авторизация успешна', 'success');
+                    
+                    // Reset input values
+                    usernameInput.value = '';
+                    passwordInput.value = '';
+                    
+                    // Reinitialize views
+                    initApp();
+                } else {
+                    let errMsg = 'Неверные учетные данные.';
+                    if (data.non_field_errors) {
+                        errMsg = data.non_field_errors.join(' ');
+                    }
+                    showGeneralError(errMsg);
+                }
+            } catch (err) {
+                console.error(err);
+                showGeneralError('Ошибка связи с сервером. Попробуйте позже.');
+            } finally {
+                setLoading(submitBtn, false, 'Войти');
+            }
+        }
+
+        function authLogout() {
+            localStorage.removeItem('bahandi_token');
+            localStorage.removeItem('bahandi_role');
+            localStorage.removeItem('bahandi_username');
+            
+            USER_TOKEN = null;
+            USER_ROLE = null;
+            USER_NAME = null;
+            
+            outletsLoaded = false;
+            sendersLoaded = false;
+
+            // Reset form fields
+            document.getElementById('write-off-form').reset();
+            document.getElementById('photo-preview-name').classList.add('hide');
+            document.getElementById('comment-char-num').innerText = '0/10';
+            document.getElementById('wo-submit').disabled = true;
+            toggleResponsibleField();
+
+            showToast('Сессия завершена', 'warning');
+            initApp();
+        }
+
+        // --- SENDER DASHBOARD FLOWS ---
+
+        async function loadSenderData() {
+            loadOutlets();
+            loadOwnRequests();
+        }
+
+        async function loadOutlets() {
+            if (outletsLoaded) return;
+            try {
+                const response = await fetch(`${API_HOST}/api/outlets/`, {
+                    headers: { 'Authorization': `Token ${USER_TOKEN}` }
+                });
+                if (response.ok) {
+                    const outlets = await response.json();
+                    const outletSelect = document.getElementById('wo-outlet');
+                    
+                    // Keep default option
+                    outletSelect.innerHTML = '<option value="">Выберите точку...</option>';
+                    outlets.forEach(out => {
+                        const opt = document.createElement('option');
+                        opt.value = out.id;
+                        opt.innerText = `${out.name} (${out.address})`;
+                        outletSelect.appendChild(opt);
+                    });
+                    outletsLoaded = true;
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Ошибка загрузки торговых точек', 'danger');
+            }
+        }
+
+        async function loadSenders() {
+            if (sendersLoaded) return;
+            try {
+                const response = await fetch(`${API_HOST}/api/senders/`, {
+                    headers: { 'Authorization': `Token ${USER_TOKEN}` }
+                });
+                if (response.ok) {
+                    const senders = await response.json();
+                    const respSelect = document.getElementById('wo-responsible');
+                    
+                    respSelect.innerHTML = '<option value="">Выберите сотрудника...</option>';
+                    senders.forEach(s => {
+                        const opt = document.createElement('option');
+                        opt.value = s.id;
+                        opt.innerText = `${s.first_name} ${s.last_name} (${s.username})`;
+                        respSelect.appendChild(opt);
+                    });
+                    sendersLoaded = true;
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Ошибка загрузки списка сотрудников', 'danger');
+            }
+        }
+
+        async function loadOwnRequests() {
+            const listContainer = document.getElementById('sender-requests-list');
+            listContainer.innerHTML = '<div class="text-center py-2" style="font-family: var(--font-mono); color: var(--text-muted);">Загрузка истории...</div>';
+            
+            try {
+                const response = await fetch(`${API_HOST}/api/write-offs/`, {
+                    headers: { 'Authorization': `Token ${USER_TOKEN}` }
+                });
+                if (response.ok) {
+                    const requests = await response.json();
+                    listContainer.innerHTML = '';
+                    
+                    if (requests.length === 0) {
+                        listContainer.innerHTML = '<div class="card text-center py-3" style="color: var(--text-muted);">История пуста</div>';
+                        return;
+                    }
+
+                    requests.forEach(req => {
+                        listContainer.appendChild(createRequestCard(req, false));
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                listContainer.innerHTML = '<div class="card text-center py-3" style="color: var(--danger);">Ошибка при загрузке данных</div>';
+            }
+        }
+
+        // Toggles visibility of deduction details field
+        function toggleResponsibleField() {
+            const type = document.getElementById('wo-type').value;
+            const respGroup = document.getElementById('responsible-user-group');
+            const respSelect = document.getElementById('wo-responsible');
+
+            if (type === 'with_deduction') {
+                respGroup.classList.remove('hide');
+                respSelect.setAttribute('required', 'required');
+                loadSenders();
+            } else {
+                respGroup.classList.add('hide');
+                respSelect.removeAttribute('required');
+                respSelect.value = '';
+            }
+        }
+
+        // Handles photo picker change
+        function handleFileChange(input) {
+            const namePreview = document.getElementById('photo-preview-name');
+            if (input.files && input.files.length > 0) {
+                namePreview.innerText = `Файл: ${input.files[0].name}`;
+                namePreview.classList.remove('hide');
+            } else {
+                namePreview.classList.add('hide');
+            }
+        }
+
+        // Validate comment length live
+        function validateCommentLength(textarea) {
+            const len = textarea.value.length;
+            const counter = document.getElementById('comment-char-num');
+            const msg = document.getElementById('comment-validator-msg');
+            const submitBtn = document.getElementById('wo-submit');
+            
+            counter.innerText = `${len}/10`;
+            
+            if (len >= 10) {
+                counter.style.color = 'var(--success)';
+                msg.innerText = 'Комментарий валиден';
+                msg.style.color = 'var(--success)';
+                submitBtn.removeAttribute('disabled');
+            } else {
+                counter.style.color = 'var(--text-muted)';
+                msg.innerText = 'Требуется не менее 10 символов';
+                msg.style.color = 'var(--text-muted)';
+                submitBtn.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        // Send write-off data with multipart
+        async function submitWriteOff() {
+            const form = document.getElementById('write-off-form');
+            const submitBtn = document.getElementById('wo-submit');
+            
+            const outletId = document.getElementById('wo-outlet').value;
+            const type = document.getElementById('wo-type').value;
+            const responsibleId = document.getElementById('wo-responsible').value;
+            const comment = document.getElementById('wo-comment').value;
+            const photoInput = document.getElementById('wo-photo');
+
+            // Clear errors
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+            // Simple validations
+            if (!outletId) {
+                showFieldError('outlet', 'Выберите торговую точку.');
+                return;
+            }
+            if (type === 'with_deduction' && !responsibleId) {
+                showFieldError('responsible_user', 'Выберите сотрудника для удержания.');
+                return;
+            }
+            if (!photoInput.files || photoInput.files.length === 0) {
+                showFieldError('photo', 'Загрузите фотографию списания.');
+                return;
+            }
+            if (comment.length < 10) {
+                showFieldError('comment', 'Комментарий должен быть от 10 символов.');
+                return;
+            }
+
+            setLoading(submitBtn, true, 'Отправка...');
+
+            const formData = new FormData();
+            formData.append('outlet', outletId);
+            formData.append('type', type);
+            if (type === 'with_deduction') {
+                formData.append('responsible_user', responsibleId);
+            }
+            formData.append('photo', photoInput.files[0]);
+            formData.append('comment', comment);
+
+            try {
+                const response = await fetch(`${API_HOST}/api/write-offs/`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Token ${USER_TOKEN}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.status === 201) {
+                    showToast('Заявка создана', 'success');
+                    form.reset();
+                    document.getElementById('photo-preview-name').classList.add('hide');
+                    document.getElementById('comment-char-num').innerText = '0/10';
+                    submitBtn.setAttribute('disabled', 'disabled');
+                    toggleResponsibleField();
+                    loadOwnRequests();
+                } else {
+                    showToast('Ошибка заполнения полей', 'danger');
+                    // Render fields validation from server
+                    for (const field in data) {
+                        showFieldError(field, data[field].join(' '));
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Ошибка соединения при отправке', 'danger');
+            } finally {
+                setLoading(submitBtn, false, 'Отправить заявку');
+            }
+        }
+
+        // --- CHECKER DASHBOARD FLOWS ---
+
+        async function loadCheckerData() {
+            const listContainer = document.getElementById('checker-requests-list');
+            listContainer.innerHTML = '<div class="text-center py-2" style="font-family: var(--font-mono); color: var(--text-muted);">Загрузка заявок...</div>';
+            
+            try {
+                const response = await fetch(`${API_HOST}/api/requests/`, {
+                    headers: { 'Authorization': `Token ${USER_TOKEN}` }
+                });
+                if (response.ok) {
+                    const requests = await response.json();
+                    listContainer.innerHTML = '';
+                    
+                    if (requests.length === 0) {
+                        listContainer.innerHTML = `
+                            <div class="card text-center py-4" style="color: var(--text-muted);">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px; margin: 0 auto 0.5rem; color: var(--border-color);">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="m9 12 2 2 4-4"/>
+                                </svg>
+                                <div>Все заявки обработаны. Новых запросов на согласование нет.</div>
+                            </div>`;
+                        return;
+                    }
+
+                    requests.forEach(req => {
+                        listContainer.appendChild(createRequestCard(req, true));
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                listContainer.innerHTML = '<div class="card text-center py-3" style="color: var(--danger);">Ошибка при загрузке данных</div>';
+            }
+        }
+
+        async function reviewRequest(id, actionVal, cardEl) {
+            // Show loading overlay on card
+            const loaderOverlay = document.createElement('div');
+            loaderOverlay.className = 'card-loading-overlay';
+            loaderOverlay.innerHTML = `
+                <div class="spinner"></div>
+                <div class="mt-2">${actionVal === 'approve' ? 'Отправка в iiko...' : 'Отклонение...'}</div>
+            `;
+            cardEl.appendChild(loaderOverlay);
+
+            try {
+                const response = await fetch(`${API_HOST}/api/requests/${id}/review/`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Token ${USER_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action: actionVal })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    const statusText = actionVal === 'approve' ? 'Заявка одобрена и выгружена в iiko' : 'Заявка отклонена';
+                    showToast(statusText, 'success');
+                    
+                    // Reload list
+                    loadCheckerData();
+                } else {
+                    const errorMsg = data.detail || 'Не удалось выполнить действие.';
+                    showToast(errorMsg, 'danger');
+                    // Remove loading overlay
+                    loaderOverlay.remove();
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Ошибка сети при обработке заявки', 'danger');
+                loaderOverlay.remove();
+            }
+        }
+
+        // --- COMPONENT BUILDERS ---
+
+        function createRequestCard(req, isChecker = false) {
+            const item = document.createElement('div');
+            item.className = 'card ' + (isChecker ? 'review-card' : '');
+            
+            // Format dates
+            const dateObj = new Date(req.created_at);
+            const formattedDate = dateObj.toLocaleDateString('ru-RU') + ' ' + dateObj.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+            // Type Label
+            const typeStr = req.type_display;
+            const responsibleStr = req.responsible_user_details 
+                ? `<div style="color: var(--warning);">Удержание: ${req.responsible_user_details.first_name} ${req.responsible_user_details.last_name}</div>`
+                : '';
+
+            const authorInfo = isChecker 
+                ? `<div>Автор: ${req.author.first_name} ${req.author.last_name} (@${req.author.username})</div>`
+                : '';
+
+            // Image URL check
+            let photoUrl = req.photo;
+            if (photoUrl && !photoUrl.startsWith('http') && !photoUrl.startsWith('/')) {
+                photoUrl = '/' + photoUrl;
+            }
+
+            const iikoActText = req.iiko_act_id 
+                ? `<div style="color: var(--success); font-family: var(--font-mono); font-size: 0.8rem; margin-top: 0.25rem;">Акт iiko: ${req.iiko_act_id}</div>` 
+                : '';
+
+            // Card content layout
+            item.innerHTML = `
+                <div class="card-header">
+                    <div>
+                        <div class="request-title">${req.outlet_details ? req.outlet_details.name : 'Торговая точка'}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">${formattedDate}</div>
+                    </div>
+                    <span class="status-badge status-${req.status}">${req.status_display}</span>
+                </div>
+                
+                <div class="request-comment">${req.comment}</div>
+                
+                <div class="request-details">
+                    <div>Тип списания: ${typeStr}</div>
+                    ${responsibleStr}
+                    ${authorInfo}
+                    ${iikoActText}
+                </div>
+
+                <div class="photo-thumbnail-container" onclick="openLightbox('${photoUrl}')">
+                    <img class="photo-thumbnail" src="${photoUrl}" alt="Вложение">
+                    <div class="photo-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 12px; height: 12px;">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        Увеличить
+                    </div>
+                </div>
+            `;
+
+            // If checker, append review actions
+            if (isChecker) {
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'review-actions';
+                
+                const approveBtn = document.createElement('button');
+                approveBtn.className = 'btn btn-success';
+                approveBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Одобрить
+                `;
+                approveBtn.onclick = () => reviewRequest(req.id, 'approve', item);
+
+                const rejectBtn = document.createElement('button');
+                rejectBtn.className = 'btn btn-danger';
+                rejectBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    Отклонить
+                `;
+                rejectBtn.onclick = () => reviewRequest(req.id, 'reject', item);
+
+                actionsDiv.appendChild(rejectBtn);
+                actionsDiv.appendChild(approveBtn);
+                item.appendChild(actionsDiv);
+            }
+
+            return item;
+        }
+
+        // --- POPUP LIGHTBOX FOR PHOTOS ---
+
+        function openLightbox(url) {
+            const modal = document.getElementById('photo-modal');
+            const img = document.getElementById('modal-image');
+            img.src = url;
+            modal.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('photo-modal').classList.remove('active');
+        }
+
+        // --- UTILITY METHODS ---
+
+        function showFieldError(field, message) {
+            const errorLabel = document.getElementById(`err-${field}`);
+            if (errorLabel) {
+                errorLabel.innerText = message;
+                errorLabel.style.display = 'block';
+            }
+        }
+
+        function showGeneralError(message) {
+            const box = document.getElementById('general-error');
+            box.innerText = message;
+            box.style.display = 'block';
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function clearGeneralError() {
+            const box = document.getElementById('general-error');
+            box.innerText = '';
+            box.style.display = 'none';
+        }
+
+        function setLoading(btn, isLoading, text = '') {
+            const spanText = btn.querySelector('span') || btn;
+            if (isLoading) {
+                btn.setAttribute('disabled', 'disabled');
+                btn.dataset.originalHtml = btn.innerHTML;
+                btn.innerHTML = `<span class="spinner"></span> <span>${text}</span>`;
+            } else {
+                btn.removeAttribute('disabled');
+                if (btn.dataset.originalHtml) {
+                    btn.innerHTML = btn.dataset.originalHtml;
+                }
+            }
+        }
+
+        // Toast feedback alerts
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            // Icon builder
+            let iconSvg = '';
+            if (type === 'success') {
+                iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polyline points="20 6 9 17 4 12"/></svg>`;
+            } else if (type === 'danger') {
+                iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+            } else {
+                iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
+            }
+
+            toast.innerHTML = `${iconSvg} <span>${message}</span>`;
+            container.appendChild(toast);
+
+            // Remove toast after duration
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity var(--transition-speed) ease-out';
+                setTimeout(() => toast.remove(), 200);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
