@@ -33,7 +33,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Идеально для Vercel
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Безопасная раздача статики на Vercel
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -70,10 +70,14 @@ SUPABASE_POOLER_URL = "postgresql://postgres.giomzfubnyrmjqnbkbpf:31190124dyus20
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL', SUPABASE_POOLER_URL),
-        conn_max_age=600,  # Удерживает соединение активным, ускоряя Serverless функции
-        ssl_require=True   # Железное требование Supabase для пуллера
+        conn_max_age=600,  # Удерживает соединение активным в Serverless
+        ssl_require=True   # Обязательно для Supabase пуллера
     )
 }
+
+# КРИТИЧЕСКИЙ ФИКС ДЛЯ СУПАБЕЙС ПУЛЛЕРА (Ошибки 500/505 в админке):
+# Отключает серверные курсоры, так как порт 6543 работает в Transaction Mode
+DATABASES['default']['DISABLE_SERVER_SIDE_CURSORS'] = True
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -98,7 +102,9 @@ if os.path.exists(STATIC_DIRS_PATH):
 
 STORAGES = {
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        # CompressedStaticFilesStorage вместо CompressedManifestStaticFilesStorage
+        # Избавляет от падений, если Vercel не успел сгенерировать статический манифест
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 # --------------------------------------
