@@ -2,12 +2,9 @@
 <html lang="ru">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bahandi — Автоматизация списаний</title>
-  <meta name="description"
-    content="Система автоматизации процесса списания на торговых точках с AI-анализом и геймификацией" />
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bahandisation</title>
   <style>
     :root {
       --primary: #1b5e20;
@@ -104,7 +101,6 @@
       padding-top: 68px;
     }
 
-    /* ===== NAV — КОМПАКТНАЯ ===== */
     .app-nav {
       position: fixed;
       top: 0;
@@ -336,7 +332,6 @@
       font-weight: 500;
     }
 
-    /* ===== TOPBAR ===== */
     .topbar {
       position: relative;
       z-index: 10;
@@ -420,7 +415,6 @@
       }
     }
 
-    /* ===== CARDS ===== */
     .card,
     .metric-card,
     .report-card,
@@ -543,7 +537,6 @@
       display: none;
     }
 
-    /* ===== BUTTONS ===== */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -617,7 +610,6 @@
       opacity: .9;
     }
 
-    /* ===== BADGES ===== */
     .badge {
       font-size: .68rem;
       font-weight: 600;
@@ -662,7 +654,6 @@
       font-family: var(--mono);
     }
 
-    /* ===== LISTS ===== */
     .list {
       display: flex;
       flex-direction: column;
@@ -716,7 +707,6 @@
       margin-top: .65rem;
     }
 
-    /* ===== STATS ===== */
     .stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -743,7 +733,6 @@
       margin-top: .1rem;
     }
 
-    /* ===== TABS ===== */
     .tabs {
       display: flex;
       gap: .3rem;
@@ -786,7 +775,6 @@
       animation: fadeIn .2s var(--ease);
     }
 
-    /* ===== AI CARD ===== */
     .ai-card {
       background: linear-gradient(135deg, rgba(59, 130, 246, .08), rgba(167, 139, 250, .08));
       border: 1px solid rgba(99, 102, 241, .2);
@@ -811,7 +799,6 @@
       display: none;
     }
 
-    /* ===== TABLE ===== */
     .s-table {
       width: 100%;
       border-collapse: collapse;
@@ -857,7 +844,6 @@
       color: var(--red);
     }
 
-    /* ===== HEATMAP ===== */
     .heat-list {
       display: flex;
       flex-direction: column;
@@ -915,7 +901,6 @@
       font-size: .82rem;
     }
 
-    /* ===== PHOTO ===== */
     .photo-thumb {
       margin-top: .5rem;
       position: relative;
@@ -939,7 +924,6 @@
       opacity: 1;
     }
 
-    /* ===== MODAL ===== */
     .modal {
       display: none;
       position: fixed;
@@ -974,7 +958,6 @@
       line-height: 1;
     }
 
-    /* ===== ERRORS ===== */
     .err-box {
       background: var(--red-bg);
       border: 1px solid rgba(239, 68, 68, .3);
@@ -986,7 +969,6 @@
       display: none;
     }
 
-    /* ===== DEBUG ===== */
     .debug-panel {
       background: var(--soft);
       border: 1px solid var(--line);
@@ -1004,7 +986,6 @@
       margin: 0;
     }
 
-    /* ===== TOASTS ===== */
     .toasts {
       position: fixed;
       bottom: 1rem;
@@ -1056,7 +1037,6 @@
       }
     }
 
-    /* ===== LOADING ===== */
     .spinner {
       border: 2px solid rgba(255, 255, 255, .1);
       width: 14px;
@@ -1126,7 +1106,25 @@
       padding-top: 1.2rem;
     }
 
-    /* ===== RESPONSIVE ===== */
+    .auth-panel .card {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .auth-panel h2 {
+      text-align: center;
+      margin-bottom: .2rem;
+      font-size: 1.3rem;
+    }
+
+    .auth-panel .sub {
+      text-align: center;
+    }
+
+    .auth-panel .fg {
+      margin-bottom: .7rem;
+    }
+
     @media (max-width: 1100px) {
       .app-shell {
         padding-top: 56px;
@@ -1327,26 +1325,6 @@
         display: none;
       }
     }
-
-    /* Auth panel specific */
-    .auth-panel .card {
-      max-width: 400px;
-      margin: 0 auto;
-    }
-
-    .auth-panel h2 {
-      text-align: center;
-      margin-bottom: .2rem;
-      font-size: 1.3rem;
-    }
-
-    .auth-panel .sub {
-      text-align: center;
-    }
-
-    .auth-panel .fg {
-      margin-bottom: .7rem;
-    }
   </style>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1359,249 +1337,303 @@
 <body>
 
   <div class="app-shell">
-    <!-- ===== КОМПАКТНАЯ ШАПКА ===== -->
     <header class="app-nav">
       <div class="brand">
-        <div class="bahandi-logo" aria-label="Bahandi"><span>B</span></div>
+        <div class="bahandi-logo" aria-label="Bahandi"><span>BAHANDI</span></div>
         <div>
-          <strong style="font-size:13px;">Bahandi</strong>
-          <span style="font-size:10px;color:rgba(255,255,255,0.5);">AI Ops</span>
+          <strong data-i18n="brand">Bahandisation</strong>
+          <span>Bahandi AI Ops</span>
         </div>
       </div>
 
-      <nav class="nav" aria-label="Main navigation" id="mainNav">
-        <button class="nav-item" data-view="auth" type="button" style="display:none">
-          <span>Вход</span>
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-item is-active" data-view="employee" type="button">
+          <span data-i18n="navEmployeeProfile">Профиль</span>
         </button>
-        <button class="nav-item hide-nav" data-view="employee" type="button">
-          <span>Профиль</span>
+        <button class="nav-item" data-view="report" type="button">
+          <span data-i18n="navReport">Списание</span>
         </button>
-        <button class="nav-item hide-nav" data-view="report" type="button">
-          <span>Списание</span>
+        <button class="nav-item" data-view="manager" type="button">
+          <span data-i18n="navManagerProfile">Профиль менеджера</span>
         </button>
-        <button class="nav-item hide-nav" data-view="manager" type="button">
-          <span>Менеджер</span>
+        <button class="nav-item" data-view="requests" type="button">
+          <span data-i18n="navRequests">Проверка</span>
         </button>
-        <button class="nav-item hide-nav" data-view="admin" type="button">
-          <span>Админ</span>
+        <button class="nav-item" data-view="analytics" type="button">
+          <span data-i18n="navAnalytics">AI-точность</span>
+        </button>
+        <button class="nav-item" data-view="suppliers" type="button">
+          <span data-i18n="navSuppliers">Поставщики</span>
+        </button>
+        <button class="nav-item" data-view="reports" type="button">
+          <span data-i18n="navReports">Отчеты</span>
+        </button>
+        <button class="nav-item" data-view="executive" type="button">
+          <span data-i18n="navExecutive">Executive</span>
         </button>
       </nav>
 
       <div class="topbar-actions">
+        <select id="languageSelect" class="compact-select" aria-label="Language">
+          <option value="ru">Русский</option>
+          <option value="en">English</option>
+          <option value="kz">Қазақша</option>
+        </select>
         <button class="ghost-button" id="themeToggle" type="button" aria-label="Theme">◐</button>
-        <div id="userInfo" class="user-chip hide">
-          <span id="chipName"></span>
-          <span id="chipRole" class="chip"></span>
-          <button onclick="logout()" class="btn-out">✕</button>
-        </div>
-        <button class="role-button" id="roleButton" type="button" onclick="doLogin()">Войти</button>
+        <button class="role-button" id="roleButton" type="button" data-action="logout">Sign up</button>
       </div>
     </header>
 
-    <!-- ===== TOPBAR ===== -->
-    <div class="topbar">
-      <div>
-        <p class="eyebrow">Bahandisation AI</p>
-        <h1 id="pageTitle">Списание за 15 секунд</h1>
-      </div>
-      <span id="apiStatus" class="status-pill is-live">● Roboflow</span>
-    </div>
-
-    <!-- ===== MAIN CONTENT ===== -->
-    <main id="app" class="content" tabindex="-1">
-
-      <div id="errBox" class="err-box"></div>
-
-      <!-- AUTH PANEL -->
-      <section id="panelAuth" class="panel active auth-panel">
-        <div class="card">
-          <h2>Вход в систему</h2>
-          <p class="sub">Авторизация сотрудников</p>
-          <form id="authForm" onsubmit="event.preventDefault();doLogin()">
-            <div class="fg">
-              <label for="inUser">Логин</label>
-              <input type="text" id="inUser" class="fc" placeholder="worker1" required autocomplete="username">
-            </div>
-            <div class="fg">
-              <label for="inPass">Пароль</label>
-              <input type="password" id="inPass" class="fc" placeholder="••••••••" required
-                autocomplete="current-password">
-            </div>
-            <button type="submit" id="btnLogin" class="btn btn-blue mt-1">
-              <span>Войти</span>
-            </button>
-          </form>
-        </div>
-      </section>
-
-      <!-- WORKER PANEL -->
-      <section id="panelWorker" class="panel">
-        <div class="card" id="workerProfile">
-          <h2>Мой профиль</h2>
-          <p class="sub" id="wpName">—</p>
-          <div class="stats" id="wpStats">
-            <div class="stat">
-              <div class="stat-val" id="wpTotal">0</div>
-              <div class="stat-label">Всего списаний</div>
-            </div>
-            <div class="stat">
-              <div class="stat-val" id="wpAccuracy">100%</div>
-              <div class="stat-label">Точность</div>
-            </div>
-            <div class="stat">
-              <div class="stat-val" id="wpApproved" style="color:var(--green)">0</div>
-              <div class="stat-label">Одобрено</div>
-            </div>
-            <div class="stat">
-              <div class="stat-val" id="wpRejected" style="color:var(--red)">0</div>
-              <div class="stat-label">Отклонено</div>
-            </div>
-          </div>
-          <div id="wpBadges" class="badge-list mt-1"></div>
-          <div id="wpAiTips" class="ai-card hide mt-2">
-            <h3>💡 AI-рекомендации</h3>
-            <p id="wpTipsText"></p>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Новое списание</h2>
-          <p class="sub">Зафиксируйте потерю продукта</p>
-
-          <form id="woForm" onsubmit="event.preventDefault();createWriteOff()">
-            <div class="fg">
-              <label for="woProduct">Продукт</label>
-              <select id="woProduct" class="fc" required onchange="onProductChange(this)">
-                <option value="">Загрузка продуктов...</option>
-              </select>
-              <div id="productDebug" class="debug-panel">
-                <pre id="productDebugContent">⏳ Загрузка продуктов...</pre>
-              </div>
-            </div>
-            <div class="fg">
-              <label for="woQty">Количество <span id="woQtyUnit"
-                  style="color:var(--blue);font-family:var(--mono)"></span></label>
-              <input type="number" id="woQty" class="fc" step="0.001" min="0.001" placeholder="10" required>
-            </div>
-            <div class="fg">
-              <label for="woReason">Причина</label>
-              <select id="woReason" class="fc" required>
-                <option value="">Выберите причину...</option>
-                <option value="expiration">Просрочка</option>
-                <option value="spoiled">Испорчен</option>
-                <option value="damaged">Поврежден</option>
-                <option value="cooking_error">Ошибка приготовления</option>
-                <option value="supplier_defect">Брак поставщика</option>
-                <option value="other">Другое</option>
-              </select>
-            </div>
-            <div class="fg">
-              <label>Фото (опционально)</label>
-              <div class="file-area">
-                <input type="file" id="woPhoto" accept="image/*" onchange="onFile(this,'woFileName')">
-                <div class="file-label">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                    <circle cx="8.5" cy="8.5" r="1.5" />
-                    <polyline points="21 15 16 10 5 21" />
-                  </svg>
-                  <span>Выбрать или сделать снимок</span>
-                </div>
-                <div id="woFileName" class="file-name hide"></div>
-              </div>
-            </div>
-            <button type="submit" id="btnWo" class="btn btn-blue mt-1">
-              <span>Отправить списание</span>
-            </button>
-          </form>
-        </div>
-
+    <div class="main">
+      <header class="topbar">
         <div>
-          <h2>Мои списания</h2>
-          <p class="sub">Ваши отправленные списания</p>
-          <div id="workerHistory" class="list"></div>
+          <p class="eyebrow" data-i18n="topEyebrow">Bahandisation AI</p>
+          <h1 id="pageTitle">Списание за 15 секунд</h1>
         </div>
-      </section>
+        <span id="apiStatus" class="status-pill">Roboflow</span>
+      </header>
 
-      <!-- MANAGER PANEL -->
-      <section id="panelManager" class="panel">
-        <div class="tabs">
-          <div class="tab active" onclick="switchTab('mgr','mgrPending',this)">Заявки</div>
-          <div class="tab" onclick="switchTab('mgr','mgrSuppliers',this)">Поставщики</div>
-          <div class="tab" onclick="switchTab('mgr','mgrAnalytics',this)">Аналитика</div>
-        </div>
+      <main id="app" class="content" tabindex="-1">
+        <div id="errBox" class="err-box"></div>
 
-        <div id="mgrPending" class="tab-content active">
-          <h2>На проверке</h2>
-          <p class="sub">Заявки, ожидающие ваше решение</p>
-          <div id="mgrRequestsList" class="list"></div>
-        </div>
+        <!-- AUTH PANEL -->
+        <section id="panelAuth" class="panel active auth-panel">
+          <div class="card">
+            <h2>Вход в систему</h2>
+            <p class="sub">Авторизация сотрудников</p>
+            <form id="authForm" onsubmit="event.preventDefault();doLogin()">
+              <div class="fg">
+                <label for="inUser">Логин</label>
+                <input type="text" id="inUser" class="fc" placeholder="worker1" required autocomplete="username">
+              </div>
+              <div class="fg">
+                <label for="inPass">Пароль</label>
+                <input type="password" id="inPass" class="fc" placeholder="••••••••" required
+                  autocomplete="current-password">
+              </div>
+              <button type="submit" id="btnLogin" class="btn btn-blue mt-1">
+                <span>Войти</span>
+              </button>
+            </form>
+          </div>
+        </section>
 
-        <div id="mgrSuppliers" class="tab-content">
-          <h2>Поставщики</h2>
-          <p class="sub">Рейтинг и аналитика по поставщикам</p>
-          <div id="suppliersTable"></div>
-        </div>
+        <!-- EMPLOYEE PANEL -->
+        <section id="panelEmployee" class="panel">
+          <div class="card" id="workerProfile">
+            <h2>Мой профиль</h2>
+            <p class="sub" id="wpName">—</p>
+            <div class="stats" id="wpStats">
+              <div class="stat">
+                <div class="stat-val" id="wpTotal">0</div>
+                <div class="stat-label">Всего списаний</div>
+              </div>
+              <div class="stat">
+                <div class="stat-val" id="wpAccuracy">100%</div>
+                <div class="stat-label">Точность</div>
+              </div>
+              <div class="stat">
+                <div class="stat-val" id="wpApproved" style="color:var(--green)">0</div>
+                <div class="stat-label">Одобрено</div>
+              </div>
+              <div class="stat">
+                <div class="stat-val" id="wpRejected" style="color:var(--red)">0</div>
+                <div class="stat-label">Отклонено</div>
+              </div>
+            </div>
+            <div id="wpBadges" class="badge-list mt-1"></div>
+            <div id="wpAiTips" class="ai-card hide mt-2">
+              <h3>💡 AI-рекомендации</h3>
+              <p id="wpTipsText"></p>
+            </div>
+          </div>
 
-        <div id="mgrAnalytics" class="tab-content">
-          <h2>Панель аналитики</h2>
-          <p class="sub">Ключевые метрики сети</p>
-          <div id="dashboardContent"></div>
+          <div class="card">
+            <h2>Новое списание</h2>
+            <p class="sub">Зафиксируйте потерю продукта</p>
 
-          <h3 class="mt-2">Тепловая карта</h3>
-          <p class="sub">Потери по филиалам</p>
-          <div id="heatmapContent" class="heat-list"></div>
+            <form id="woForm" onsubmit="event.preventDefault();createWriteOff()">
+              <div class="fg">
+                <label for="woProduct">Продукт</label>
+                <select id="woProduct" class="fc" required onchange="onProductChange(this)">
+                  <option value="">Загрузка продуктов...</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label for="woQty">Количество <span id="woQtyUnit"
+                    style="color:var(--blue);font-family:var(--mono)"></span></label>
+                <input type="number" id="woQty" class="fc" step="0.001" min="0.001" placeholder="10" required>
+              </div>
+              <div class="fg">
+                <label for="woReason">Причина</label>
+                <select id="woReason" class="fc" required>
+                  <option value="">Загрузка причин...</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Фото (опционально)</label>
+                <div class="file-area">
+                  <input type="file" id="woPhoto" accept="image/*" onchange="onFile(this,'woFileName')">
+                  <div class="file-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                    <span>Выбрать или сделать снимок</span>
+                  </div>
+                  <div id="woFileName" class="file-name hide"></div>
+                </div>
+              </div>
+              <button type="submit" id="btnWo" class="btn btn-blue mt-1">
+                <span>Отправить списание</span>
+              </button>
+            </form>
+          </div>
 
-          <button class="btn btn-ghost btn-sm mt-2" onclick="exportSheets()" id="btnExport">
-            <span>📊 Экспорт в Google Sheets</span>
-          </button>
-        </div>
-      </section>
+          <div>
+            <h2>Мои списания</h2>
+            <p class="sub">Ваши отправленные списания</p>
+            <div id="workerHistory" class="list"></div>
+          </div>
+        </section>
 
-      <!-- ADMIN PANEL -->
-      <section id="panelAdmin" class="panel">
-        <div class="tabs">
-          <div class="tab active" onclick="switchTab('adm','admDash',this)">Дашборд</div>
-          <div class="tab" onclick="switchTab('adm','admHeatmap',this)">Тепловая карта</div>
-          <div class="tab" onclick="switchTab('adm','admExport',this)">Экспорт</div>
-        </div>
+        <!-- REPORT PANEL -->
+        <section id="panelReport" class="panel">
+          <div class="card">
+            <h2>Новое списание</h2>
+            <p class="sub">Зафиксируйте потерю продукта</p>
 
-        <div id="admDash" class="tab-content active">
-          <h2>Общая аналитика</h2>
-          <p class="sub">Метрики и AI-инсайты по всей сети</p>
-          <div id="admDashContent"></div>
-        </div>
+            <form id="woFormReport" onsubmit="event.preventDefault();createWriteOff()">
+              <div class="fg">
+                <label for="woProductReport">Продукт</label>
+                <select id="woProductReport" class="fc" required onchange="onProductChange(this)">
+                  <option value="">Загрузка продуктов...</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label for="woQtyReport">Количество <span id="woQtyUnitReport"
+                    style="color:var(--blue);font-family:var(--mono)"></span></label>
+                <input type="number" id="woQtyReport" class="fc" step="0.001" min="0.001" placeholder="10" required>
+              </div>
+              <div class="fg">
+                <label for="woReasonReport">Причина</label>
+                <select id="woReasonReport" class="fc" required>
+                  <option value="">Загрузка причин...</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Фото (опционально)</label>
+                <div class="file-area">
+                  <input type="file" id="woPhotoReport" accept="image/*" onchange="onFile(this,'woFileNameReport')">
+                  <div class="file-label">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                    <span>Выбрать или сделать снимок</span>
+                  </div>
+                  <div id="woFileNameReport" class="file-name hide"></div>
+                </div>
+              </div>
+              <button type="submit" id="btnWoReport" class="btn btn-blue mt-1">
+                <span>Отправить списание</span>
+              </button>
+            </form>
+          </div>
+        </section>
 
-        <div id="admHeatmap" class="tab-content">
-          <h2>Тепловая карта</h2>
-          <p class="sub">Визуализация потерь по филиалам</p>
-          <div id="admHeatContent" class="heat-list"></div>
-        </div>
+        <!-- MANAGER PANEL -->
+        <section id="panelManager" class="panel">
+          <div class="tabs">
+            <div class="tab active" onclick="switchTab('mgr','mgrPending',this)">Заявки</div>
+            <div class="tab" onclick="switchTab('mgr','mgrAnalytics',this)">Аналитика</div>
+          </div>
 
-        <div id="admExport" class="tab-content">
-          <h2>Экспорт данных</h2>
-          <p class="sub">Выгрузка в Google Sheets</p>
-          <button class="btn btn-blue mt-1" onclick="exportSheets()" id="btnAdmExport">
-            <span>📊 Выгрузить данные</span>
-          </button>
-          <div id="exportResult" class="mt-2"></div>
-        </div>
-      </section>
+          <div id="mgrPending" class="tab-content active">
+            <h2>На проверке</h2>
+            <p class="sub">Заявки, ожидающие ваше решение</p>
+            <div id="mgrRequestsList" class="list"></div>
+          </div>
 
-    </main>
+          <div id="mgrAnalytics" class="tab-content">
+            <h2>Панель аналитики</h2>
+            <p class="sub">Ключевые метрики сети</p>
+            <div id="dashboardContent"></div>
+          </div>
+        </section>
 
-    <footer>BAHANDI AI CONTROL SYSTEM v2.0 — MENTORIA HACKATHON 2026</footer>
+        <!-- REQUESTS PANEL -->
+        <section id="panelRequests" class="panel">
+          <div class="card">
+            <h2>Проверка заявок</h2>
+            <p class="sub">Заявки, ожидающие ваше решение</p>
+            <div id="requestsList" class="list"></div>
+          </div>
+        </section>
+
+        <!-- ANALYTICS PANEL -->
+        <section id="panelAnalytics" class="panel">
+          <div class="card">
+            <h2>AI-точность</h2>
+            <p class="sub">Аналитика по списаниям</p>
+            <div id="analyticsContent"></div>
+          </div>
+        </section>
+
+        <!-- SUPPLIERS PANEL -->
+        <section id="panelSuppliers" class="panel">
+          <div class="card">
+            <h2>Поставщики</h2>
+            <p class="sub">Рейтинг и аналитика по поставщикам</p>
+            <div id="suppliersTable"></div>
+          </div>
+        </section>
+
+        <!-- REPORTS PANEL -->
+        <section id="panelReports" class="panel">
+          <div class="card">
+            <h2>Отчеты</h2>
+            <p class="sub">Скачайте PDF отчеты</p>
+            <div class="stats">
+              <button class="btn btn-ghost" onclick="downloadReport('today')">📄 За сегодня</button>
+              <button class="btn btn-ghost" onclick="downloadReport('week')">📄 За неделю</button>
+              <button class="btn btn-ghost" onclick="downloadReport('month')">📄 За месяц</button>
+              <button class="btn btn-ghost" onclick="downloadReport('year')">📄 За год</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXECUTIVE PANEL -->
+        <section id="panelExecutive" class="panel">
+          <div class="card">
+            <h2>Executive Dashboard</h2>
+            <p class="sub">Ключевые метрики для руководства</p>
+            <div id="executiveContent"></div>
+          </div>
+        </section>
+      </main>
+    </div>
   </div>
 
-  <!-- Lightbox -->
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <button class="bottom-item is-active" data-view="employee" type="button">⌂<span
+        data-i18n="navEmployeeProfile">Профиль</span></button>
+    <button class="bottom-item" data-view="report" type="button">□<span data-i18n="bottomReport">Заявка</span></button>
+    <button class="bottom-item" data-view="requests" type="button">✓<span
+        data-i18n="bottomApprove">Проверка</span></button>
+    <button class="bottom-item" data-view="analytics" type="button">▥<span>AI</span></button>
+  </nav>
+
+  <div id="toasts" class="toasts"></div>
+
   <div id="lightbox" class="modal" onclick="closeLB()">
     <button class="modal-close" onclick="closeLB()">×</button>
     <img id="lbImg" src="" alt="Фото" onclick="event.stopPropagation()">
   </div>
-
-  <!-- Toasts -->
-  <div id="toasts" class="toasts"></div>
 
   <script>
     // ════════════════════════════════════════════
@@ -1615,13 +1647,14 @@
     let UNAME = localStorage.getItem('bh_uname');
     let FNAME = localStorage.getItem('bh_fname');
     let productsCache = null;
+    let reasonsCache = null;
+    let branchesCache = null;
 
     document.addEventListener('DOMContentLoaded', init);
 
     function init() {
       console.log('🚀 Bahandi APP инициализирована');
 
-      // Theme toggle
       const themeBtn = document.getElementById('themeToggle');
       themeBtn.addEventListener('click', () => {
         const dark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -1630,16 +1663,108 @@
         localStorage.setItem('bh_theme', dark ? 'light' : 'dark');
       });
 
-      // Restore theme
       if (localStorage.getItem('bh_theme') === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
         themeBtn.textContent = '◑';
       }
 
       hideUserChip();
-      show('panelAuth');
+      showPanel('panelAuth');
       document.getElementById('roleButton').textContent = 'Войти';
       document.getElementById('roleButton').onclick = doLogin;
+
+      if (TOKEN) {
+        showUserChip();
+        document.getElementById('roleButton').textContent = 'Выйти';
+        document.getElementById('roleButton').onclick = logout;
+        routeToPanel();
+      }
+
+      setupNavigation();
+    }
+
+    // ════════════════════════════════════════════
+    // NAVIGATION
+    // ════════════════════════════════════════════
+
+    function setupNavigation() {
+      document.querySelectorAll('.nav-item, .bottom-item').forEach(item => {
+        item.addEventListener('click', function () {
+          const view = this.dataset.view;
+          if (!view) return;
+
+          if (!TOKEN && view !== 'auth') {
+            toast('Сначала войдите в систему', 'warn');
+            showPanel('panelAuth');
+            return;
+          }
+
+          if (view === 'auth') {
+            showPanel('panelAuth');
+            return;
+          }
+
+          const panelMap = {
+            employee: 'panelEmployee',
+            report: 'panelReport',
+            manager: 'panelManager',
+            requests: 'panelRequests',
+            analytics: 'panelAnalytics',
+            suppliers: 'panelSuppliers',
+            reports: 'panelReports',
+            executive: 'panelExecutive'
+          };
+
+          const panelId = panelMap[view];
+          if (!panelId) return;
+
+          if (view === 'manager' && ROLE !== 'manager' && ROLE !== 'admin') {
+            toast('Доступ только для менеджеров', 'err');
+            return;
+          }
+
+          showPanel(panelId);
+          setActiveNav(view);
+
+          if (view === 'employee') loadWorkerData();
+          if (view === 'report') loadReportData();
+          if (view === 'manager') loadManagerData();
+          if (view === 'requests') loadRequestsData();
+          if (view === 'analytics') loadAnalyticsData();
+          if (view === 'suppliers') loadSuppliersData();
+          if (view === 'reports') loadReportsData();
+          if (view === 'executive') loadExecutiveData();
+        });
+      });
+    }
+
+    function setActiveNav(view) {
+      document.querySelectorAll('.nav-item, .bottom-item').forEach(el => {
+        el.classList.remove('is-active');
+        if (el.dataset.view === view) {
+          el.classList.add('is-active');
+        }
+      });
+    }
+
+    function showPanel(id) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      const panel = document.getElementById(id);
+      if (panel) panel.classList.add('active');
+      clearErr();
+
+      const titles = {
+        panelAuth: 'Вход в систему',
+        panelEmployee: 'Профиль сотрудника',
+        panelReport: 'Новое списание',
+        panelManager: 'Панель менеджера',
+        panelRequests: 'Проверка заявок',
+        panelAnalytics: 'AI-точность',
+        panelSuppliers: 'Поставщики',
+        panelReports: 'Отчеты',
+        panelExecutive: 'Executive Dashboard'
+      };
+      document.getElementById('pageTitle').textContent = titles[id] || 'Bahandi AI Ops';
     }
 
     // ════════════════════════════════════════════
@@ -1709,13 +1834,45 @@
       localStorage.removeItem('bh_uname');
       localStorage.removeItem('bh_fname');
       TOKEN = REFRESH = ROLE = UNAME = FNAME = null;
-      productsCache = null;
+      productsCache = reasonsCache = branchesCache = null;
       hideUserChip();
-      show('panelAuth');
+      showPanel('panelAuth');
       document.getElementById('roleButton').textContent = 'Войти';
       document.getElementById('roleButton').onclick = doLogin;
       toast('Сессия завершена', 'warn');
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('is-active'));
+      document.querySelectorAll('.nav-item, .bottom-item').forEach(el => el.classList.remove('is-active'));
+    }
+
+    function routeToPanel() {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('hide-nav'));
+
+      if (ROLE === 'worker') {
+        showPanel('panelEmployee');
+        loadWorkerData();
+        setActiveNav('employee');
+      } else if (ROLE === 'manager') {
+        showPanel('panelManager');
+        loadManagerData();
+        setActiveNav('manager');
+      } else if (ROLE === 'admin') {
+        showPanel('panelAdmin');
+        loadAdminData();
+        setActiveNav('admin');
+      }
+    }
+
+    function showUserChip() {
+      const el = document.getElementById('userInfo');
+      el.classList.remove('hide');
+      document.getElementById('chipName').innerText = FNAME || UNAME;
+      const chip = document.getElementById('chipRole');
+      const labels = { worker: 'Сотрудник', manager: 'Менеджер', admin: 'Админ' };
+      chip.innerText = labels[ROLE] || ROLE;
+      chip.className = 'chip chip-' + ROLE;
+    }
+
+    function hideUserChip() {
+      document.getElementById('userInfo').classList.add('hide');
     }
 
     function authHeaders() {
@@ -1754,75 +1911,143 @@
     }
 
     // ════════════════════════════════════════════
-    // ROUTING
+    // DATA LOADING
     // ════════════════════════════════════════════
 
-    function routeToPanel() {
-      document.querySelectorAll('.nav-item').forEach(el => {
-        el.classList.remove('hide-nav');
-      });
+    async function loadProducts(targetSelect = 'woProduct') {
+      console.log('🔄 Загрузка продуктов...');
+      const sel = document.getElementById(targetSelect);
+      if (!sel) return;
 
-      if (ROLE === 'worker') {
-        show('panelWorker');
-        loadWorkerData();
-        setActiveNav('employee');
-      } else if (ROLE === 'manager') {
-        show('panelManager');
-        loadManagerData();
-        setActiveNav('manager');
-      } else if (ROLE === 'admin') {
-        show('panelAdmin');
-        loadAdminData();
-        setActiveNav('admin');
+      if (productsCache && productsCache.length > 0) {
+        fillProductSelect(sel, productsCache);
+        return;
+      }
+
+      sel.innerHTML = '<option value="">⏳ Загрузка...</option>';
+      sel.disabled = true;
+
+      try {
+        const r = await authFetch(`${API}/api/products/`, { headers: authHeaders() });
+        if (r.ok) {
+          productsCache = await r.json();
+          console.log('✅ Получено продуктов:', productsCache.length);
+          if (productsCache.length === 0) {
+            sel.innerHTML = '<option value="">❌ Нет продуктов</option>';
+            toast('В базе нет продуктов.', 'warn');
+          } else {
+            fillProductSelect(sel, productsCache);
+          }
+        } else {
+          sel.innerHTML = '<option value="">❌ Ошибка загрузки</option>';
+          toast('Ошибка загрузки продуктов', 'err');
+        }
+      } catch (e) {
+        console.error(e);
+        sel.innerHTML = '<option value="">❌ Ошибка соединения</option>';
+        toast('Не удалось загрузить продукты', 'err');
+      } finally {
+        sel.disabled = false;
       }
     }
 
-    function setActiveNav(view) {
-      document.querySelectorAll('.nav-item').forEach(el => {
-        el.classList.remove('is-active');
-        if (el.dataset.view === view) {
-          el.classList.add('is-active');
-        }
+    function fillProductSelect(sel, products) {
+      if (!products || products.length === 0) {
+        sel.innerHTML = '<option value="">Нет доступных продуктов</option>';
+        return;
+      }
+
+      sel.innerHTML = '<option value="">Выберите продукт...</option>';
+      products.forEach(p => {
+        const unit = p.unit_type === 'piece' ? 'шт' : 'кг';
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.innerText = `${p.name} — ${Number(p.unit_price).toLocaleString('ru-RU')}₸/${unit}`;
+        opt.dataset.unitType = p.unit_type;
+        sel.appendChild(opt);
       });
     }
 
-    function show(id) {
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-      const panel = document.getElementById(id);
-      if (panel) panel.classList.add('active');
-      clearErr();
+    async function loadReasons(targetSelect = 'woReason') {
+      console.log('🔄 Загрузка причин...');
+      const sel = document.getElementById(targetSelect);
+      if (!sel) return;
 
-      const titles = {
-        panelAuth: 'Вход в систему',
-        panelWorker: 'Профиль сотрудника',
-        panelManager: 'Панель менеджера',
-        panelAdmin: 'Админ-панель'
-      };
-      document.getElementById('pageTitle').textContent = titles[id] || 'Bahandi AI Ops';
+      if (reasonsCache && reasonsCache.length > 0) {
+        fillReasonSelect(sel, reasonsCache);
+        return;
+      }
+
+      sel.innerHTML = '<option value="">⏳ Загрузка...</option>';
+
+      try {
+        const r = await authFetch(`${API}/api/reasons/`, { headers: authHeaders() });
+        if (r.ok) {
+          reasonsCache = await r.json();
+          console.log('✅ Получено причин:', reasonsCache.length);
+          if (reasonsCache.length === 0) {
+            sel.innerHTML = '<option value="">❌ Нет причин</option>';
+            toast('В базе нет причин списаний.', 'warn');
+          } else {
+            fillReasonSelect(sel, reasonsCache);
+          }
+        } else {
+          sel.innerHTML = '<option value="">❌ Ошибка загрузки</option>';
+          toast('Ошибка загрузки причин', 'err');
+        }
+      } catch (e) {
+        console.error(e);
+        sel.innerHTML = '<option value="">❌ Ошибка соединения</option>';
+        toast('Не удалось загрузить причины', 'err');
+      }
     }
 
-    function showUserChip() {
-      const el = document.getElementById('userInfo');
-      el.classList.remove('hide');
-      document.getElementById('chipName').innerText = FNAME || UNAME;
-      const chip = document.getElementById('chipRole');
-      const labels = { worker: 'Сотрудник', manager: 'Менеджер', admin: 'Админ' };
-      chip.innerText = labels[ROLE] || ROLE;
-      chip.className = 'chip chip-' + ROLE;
+    function fillReasonSelect(sel, reasons) {
+      if (!reasons || reasons.length === 0) {
+        sel.innerHTML = '<option value="">Нет доступных причин</option>';
+        return;
+      }
+
+      sel.innerHTML = '<option value="">Выберите причину...</option>';
+      reasons.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.id;
+        opt.innerText = r.display_name || r.name;
+        sel.appendChild(opt);
+      });
     }
 
-    function hideUserChip() {
-      document.getElementById('userInfo').classList.add('hide');
+    function onProductChange(sel) {
+      const opt = sel.options[sel.selectedIndex];
+      const unitElId = sel.id === 'woProduct' ? 'woQtyUnit' : 'woQtyUnitReport';
+      const unitEl = document.getElementById(unitElId);
+      if (opt && opt.dataset.unitType) {
+        const unit = opt.dataset.unitType === 'piece' ? '(шт)' : '(кг)';
+        unitEl.innerText = unit;
+        const qtyInput = document.getElementById(sel.id === 'woProduct' ? 'woQty' : 'woQtyReport');
+        if (qtyInput) {
+          qtyInput.step = opt.dataset.unitType === 'piece' ? '1' : '0.001';
+          qtyInput.placeholder = opt.dataset.unitType === 'piece' ? '5' : '2.500';
+        }
+      } else {
+        unitEl.innerText = '';
+      }
     }
 
     // ════════════════════════════════════════════
-    // WORKER FLOWS
+    // WORKER
     // ════════════════════════════════════════════
 
     async function loadWorkerData() {
       loadWorkerProfile();
-      loadProducts();
+      loadProducts('woProduct');
+      loadReasons('woReason');
       loadWorkerHistory();
+    }
+
+    async function loadReportData() {
+      loadProducts('woProductReport');
+      loadReasons('woReasonReport');
     }
 
     async function loadWorkerProfile() {
@@ -1848,7 +2073,10 @@
         if (d.ai_recommendations) {
           const tips = d.ai_recommendations;
           let text = '';
-          if (typeof tips === 'string') { text = tips; } else if (tips.tips) { text = Array.isArray(tips.tips) ? tips.tips.join('\n') : tips.tips; } else if (tips.recommendation) { text = tips.recommendation; } else { text = JSON.stringify(tips); }
+          if (typeof tips === 'string') text = tips;
+          else if (tips.tips) text = Array.isArray(tips.tips) ? tips.tips.join('\n') : tips.tips;
+          else if (tips.recommendation) text = tips.recommendation;
+          else text = JSON.stringify(tips);
 
           if (text) {
             document.getElementById('wpTipsText').innerText = text;
@@ -1860,117 +2088,15 @@
       }
     }
 
-    // ════════════════════════════════════════════
-    // PRODUCTS LOADING
-    // ════════════════════════════════════════════
-
-    async function loadProducts() {
-      console.log('🔄 Начинаем загрузку продуктов...');
-      const sel = document.getElementById('woProduct');
-      const debugContent = document.getElementById('productDebugContent');
-
-      debugContent.textContent = '⏳ Загрузка продуктов с сервера...';
-
-      if (productsCache && productsCache.length > 0) {
-        console.log('✅ Используем кеш:', productsCache.length, 'продуктов');
-        fillProductSelect(productsCache);
-        debugContent.textContent = `✅ Загружено из кеша: ${productsCache.length} продуктов`;
-        return;
-      }
-
-      sel.innerHTML = '<option value="">⏳ Загрузка...</option>';
-      sel.disabled = true;
-
-      try {
-        const url = `${API}/api/products/`;
-        console.log('📡 Запрос к API:', url);
-
-        const r = await authFetch(url, { headers: authHeaders() });
-        console.log('📊 Статус ответа:', r.status);
-
-        if (r.ok) {
-          productsCache = await r.json();
-          console.log('✅ Получено продуктов:', productsCache.length);
-
-          if (productsCache.length === 0) {
-            debugContent.textContent = '⚠️ API вернул 0 продуктов. Добавьте продукты в админке.';
-            sel.innerHTML = '<option value="">❌ Нет продуктов в базе</option>';
-            toast('В базе нет продуктов. Добавьте их через админку.', 'warn');
-          } else {
-            debugContent.textContent = `✅ Загружено ${productsCache.length} продуктов`;
-            fillProductSelect(productsCache);
-            toast(`Загружено ${productsCache.length} продуктов`, 'ok');
-          }
-        } else {
-          const errorText = await r.text();
-          console.error('❌ Ошибка API:', r.status, errorText);
-          debugContent.textContent = `❌ Ошибка ${r.status}: ${errorText.substring(0, 100)}`;
-          sel.innerHTML = `<option value="">❌ Ошибка загрузки (${r.status})</option>`;
-
-          if (r.status === 401) {
-            toast('Сессия истекла. Перелогиньтесь.', 'err');
-          } else {
-            toast(`Ошибка загрузки продуктов: ${r.status}`, 'err');
-          }
-        }
-      } catch (e) {
-        console.error('💥 Критическая ошибка:', e);
-        debugContent.textContent = `💥 Ошибка: ${e.message}`;
-        sel.innerHTML = '<option value="">❌ Ошибка соединения</option>';
-        toast('Не удалось загрузить продукты', 'err');
-      } finally {
-        sel.disabled = false;
-        console.log('🏁 Загрузка продуктов завершена');
-      }
-    }
-
-    function fillProductSelect(products) {
-      const sel = document.getElementById('woProduct');
-      if (!products || products.length === 0) {
-        sel.innerHTML = '<option value="">Нет доступных продуктов</option>';
-        return;
-      }
-
-      sel.innerHTML = '<option value="">Выберите продукт...</option>';
-      products.forEach(p => {
-        const unit = p.unit_type === 'piece' ? 'шт' : 'кг';
-        const opt = document.createElement('option');
-        opt.value = p.id;
-        const price = Number(p.unit_price).toLocaleString('ru-RU');
-        opt.innerText = `${p.name} — ${price}₸/${unit}`;
-        opt.dataset.sku = p.sku;
-        opt.dataset.unitType = p.unit_type;
-        sel.appendChild(opt);
-      });
-
-      console.log(`✅ Заполнено ${products.length} опций в select`);
-    }
-
-    function onProductChange(sel) {
-      const opt = sel.options[sel.selectedIndex];
-      const unitEl = document.getElementById('woQtyUnit');
-      if (opt && opt.dataset.unitType) {
-        const unit = opt.dataset.unitType === 'piece' ? '(шт)' : '(кг)';
-        unitEl.innerText = unit;
-        const qtyInput = document.getElementById('woQty');
-        if (opt.dataset.unitType === 'piece') {
-          qtyInput.step = '1';
-          qtyInput.placeholder = '5';
-        } else {
-          qtyInput.step = '0.001';
-          qtyInput.placeholder = '2.500';
-        }
-      } else {
-        unitEl.innerText = '';
-      }
-    }
-
     async function createWriteOff() {
-      const btn = document.getElementById('btnWo');
-      const product = document.getElementById('woProduct').value;
-      const qty = document.getElementById('woQty').value;
-      const reason = document.getElementById('woReason').value;
-      const photo = document.getElementById('woPhoto').files[0];
+      const formId = event && event.target ? event.target.id : 'woForm';
+      const isReport = formId === 'woFormReport';
+
+      const product = document.getElementById(isReport ? 'woProductReport' : 'woProduct').value;
+      const qty = document.getElementById(isReport ? 'woQtyReport' : 'woQty').value;
+      const reason = document.getElementById(isReport ? 'woReasonReport' : 'woReason').value;
+      const photo = document.getElementById(isReport ? 'woPhotoReport' : 'woPhoto').files[0];
+      const btn = document.getElementById(isReport ? 'btnWoReport' : 'btnWo');
 
       if (!product || !qty || !reason) {
         toast('Заполните все обязательные поля', 'err');
@@ -1991,15 +2117,17 @@
           headers: authHeaders(),
           body: fd
         });
-        const d = await r.json();
 
         if (r.status === 201) {
           toast('Списание создано', 'ok');
-          document.getElementById('woForm').reset();
-          document.getElementById('woFileName').classList.add('hide');
-          loadWorkerHistory();
-          loadWorkerProfile();
+          document.getElementById(isReport ? 'woFormReport' : 'woForm').reset();
+          document.getElementById(isReport ? 'woFileNameReport' : 'woFileName').classList.add('hide');
+          if (!isReport) {
+            loadWorkerHistory();
+            loadWorkerProfile();
+          }
         } else {
+          const d = await r.json();
           toast(d.error || 'Ошибка при создании', 'err');
         }
       } catch (e) {
@@ -2040,18 +2168,21 @@
     }
 
     // ════════════════════════════════════════════
-    // MANAGER FLOWS
+    // MANAGER
     // ════════════════════════════════════════════
 
     async function loadManagerData() {
       loadPendingRequests();
-      loadSuppliers();
       loadDashboard('dashboardContent');
-      loadHeatmap('heatmapContent');
     }
 
-    async function loadPendingRequests() {
-      const container = document.getElementById('mgrRequestsList');
+    async function loadRequestsData() {
+      loadPendingRequestsFor('requestsList');
+    }
+
+    async function loadPendingRequests(containerId = 'mgrRequestsList') {
+      const container = document.getElementById(containerId);
+      if (!container) return;
       container.innerHTML = '<div class="empty">Загрузка заявок...</div>';
 
       try {
@@ -2073,7 +2204,7 @@
         }
 
         data.forEach(wo => {
-          container.appendChild(buildReviewCard(wo));
+          container.appendChild(buildReviewCard(wo, containerId));
         });
       } catch (e) {
         console.error(e);
@@ -2081,22 +2212,13 @@
       }
     }
 
-    function buildReviewCard(wo) {
+    function buildReviewCard(wo, containerId) {
       const el = document.createElement('div');
       el.className = 'item review-card';
       el.id = `wo-card-${wo.id}`;
 
       const date = new Date(wo.created_at);
       const dateStr = date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-
-      const reasonLabels = {
-        expiration: 'Просрочка',
-        spoiled: 'Испорчен',
-        damaged: 'Поврежден',
-        cooking_error: 'Ошибка приготовления',
-        supplier_defect: 'Брак поставщика',
-        other: 'Другое'
-      };
 
       const cost = (parseFloat(wo.quantity) * parseFloat(wo.product_details?.unit_price || 0)).toFixed(0);
 
@@ -2119,15 +2241,15 @@
             <div class="item-details">
                 <div>👤 ${wo.employee_details?.fullname || wo.employee_details?.username || '—'} (${wo.branch_details?.name || '—'})</div>
                 <div>📦 Количество: ${wo.quantity} ${wo.product_details?.unit_type === 'piece' ? 'шт' : 'кг'} — <b style="color:var(--amber)">${cost}₸</b></div>
-                <div>📝 Причина: ${wo.reason_display || reasonLabels[wo.reason] || wo.reason}</div>
+                <div>📝 Причина: ${wo.reason_display || wo.reason}</div>
                 ${wo.ai_confidence ? `<div>🤖 AI-уверенность: ${wo.ai_confidence}%</div>` : ''}
             </div>
             ${photoHtml}
             <div class="review-actions">
-                <button class="btn btn-red btn-sm" onclick="reviewWO(${wo.id},'reject',this.closest('.item'))">
+                <button class="btn btn-red btn-sm" onclick="reviewWO(${wo.id},'reject',this.closest('.item'),'${containerId}')">
                     ✕ Отклонить
                 </button>
-                <button class="btn btn-green btn-sm" onclick="reviewWO(${wo.id},'approve',this.closest('.item'))">
+                <button class="btn btn-green btn-sm" onclick="reviewWO(${wo.id},'approve',this.closest('.item'),'${containerId}')">
                     ✓ Одобрить
                 </button>
             </div>
@@ -2135,7 +2257,7 @@
       return el;
     }
 
-    async function reviewWO(id, action, cardEl) {
+    async function reviewWO(id, action, cardEl, containerId) {
       const overlay = document.createElement('div');
       overlay.className = 'loading-overlay';
       overlay.innerHTML = `<div class="spinner"></div><div class="mt-1">${action === 'approve' ? 'Одобрение...' : 'Отклонение...'}</div>`;
@@ -2148,12 +2270,12 @@
           headers: authJSON(),
           body: JSON.stringify({ action })
         });
-        const d = await r.json();
 
         if (r.ok) {
           toast(action === 'approve' ? 'Заявка одобрена' : 'Заявка отклонена', 'ok');
-          loadPendingRequests();
+          loadPendingRequests(containerId);
         } else {
+          const d = await r.json();
           toast(d.error || 'Ошибка обработки', 'err');
           overlay.remove();
         }
@@ -2164,8 +2286,113 @@
       }
     }
 
-    async function loadSuppliers() {
+    // ════════════════════════════════════════════
+    // ANALYTICS
+    // ════════════════════════════════════════════
+
+    async function loadAnalyticsData() {
+      const container = document.getElementById('analyticsContent');
+      if (!container) return;
+      container.innerHTML = '<div class="empty">Загрузка аналитики...</div>';
+
+      try {
+        const r = await authFetch(`${API}/api/analytics/dashboard/`, { headers: authHeaders() });
+        if (!r.ok) {
+          container.innerHTML = '<div class="empty" style="color:var(--red)">Нет доступа к аналитике</div>';
+          return;
+        }
+        const d = await r.json();
+
+        container.innerHTML = `
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-val" style="color:var(--red)">${formatMoney(d.total_losses_tenge)}</div>
+                        <div class="stat-label">Общие потери</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" style="color:var(--green)">${formatMoney(d.prevented_losses_tenge)}</div>
+                        <div class="stat-label">Предотвращено</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" style="color:var(--amber)">${formatMoney(d.forecast_losses_next_month_tenge)}</div>
+                        <div class="stat-label">Прогноз (мес.)</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" style="color:var(--blue)">${d.losses_by_branch ? d.losses_by_branch.length : 0}</div>
+                        <div class="stat-label">Филиалов</div>
+                    </div>
+                </div>
+
+                ${d.ai_daily_insight ? `
+                <div class="ai-card mt-2">
+                    <h3>🧠 AI-инсайт дня</h3>
+                    <p>${d.ai_daily_insight}</p>
+                </div>` : ''}
+
+                ${d.root_cause_summary ? `
+                <div class="ai-card mt-1" style="border-color:rgba(239,68,68,.2);background:linear-gradient(135deg,rgba(239,68,68,.06),rgba(245,158,11,.06))">
+                    <h3 style="color:var(--amber)">🔍 Причины потерь</h3>
+                    <p>${d.root_cause_summary}</p>
+                </div>` : ''}
+            `;
+      } catch (e) {
+        console.error(e);
+        container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка загрузки</div>';
+      }
+    }
+
+    async function loadDashboard(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '<div class="empty">Загрузка аналитики...</div>';
+
+      try {
+        const r = await authFetch(`${API}/api/analytics/dashboard/`, { headers: authHeaders() });
+        if (!r.ok) {
+          container.innerHTML = '<div class="empty" style="color:var(--red)">Нет доступа к аналитике</div>';
+          return;
+        }
+        const d = await r.json();
+
+        container.innerHTML = `
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-val" style="color:var(--red)">${formatMoney(d.total_losses_tenge)}</div>
+                        <div class="stat-label">Общие потери</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" style="color:var(--green)">${formatMoney(d.prevented_losses_tenge)}</div>
+                        <div class="stat-label">Предотвращено</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" style="color:var(--amber)">${formatMoney(d.forecast_losses_next_month_tenge)}</div>
+                        <div class="stat-label">Прогноз (мес.)</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-val" style="color:var(--blue)">${d.losses_by_branch ? d.losses_by_branch.length : 0}</div>
+                        <div class="stat-label">Филиалов</div>
+                    </div>
+                </div>
+
+                ${d.ai_daily_insight ? `
+                <div class="ai-card mt-2">
+                    <h3>🧠 AI-инсайт дня</h3>
+                    <p>${d.ai_daily_insight}</p>
+                </div>` : ''}
+            `;
+      } catch (e) {
+        console.error(e);
+        container.innerHTML = '<div class="empty" style="color:var(--red)">Ошибка загрузки</div>';
+      }
+    }
+
+    // ════════════════════════════════════════════
+    // SUPPLIERS
+    // ════════════════════════════════════════════
+
+    async function loadSuppliersData() {
       const container = document.getElementById('suppliersTable');
+      if (!container) return;
       container.innerHTML = '<div class="empty">Загрузка...</div>';
 
       try {
@@ -2207,50 +2434,22 @@
     }
 
     // ════════════════════════════════════════════
-    // ADMIN FLOWS
+    // REPORTS & EXECUTIVE
     // ════════════════════════════════════════════
 
-    async function loadAdminData() {
-      loadDashboard('admDashContent');
-      loadHeatmap('admHeatContent');
+    async function loadReportsData() {
+      // Просто показываем кнопки для скачивания
     }
 
-    // ════════════════════════════════════════════
-    // ANALYTICS (shared)
-    // ════════════════════════════════════════════
-
-    async function loadDashboard(containerId) {
-      const container = document.getElementById(containerId);
+    async function loadExecutiveData() {
+      const container = document.getElementById('executiveContent');
       if (!container) return;
-      container.innerHTML = '<div class="empty">Загрузка аналитики...</div>';
+      container.innerHTML = '<div class="empty">Загрузка...</div>';
 
       try {
         const r = await authFetch(`${API}/api/analytics/dashboard/`, { headers: authHeaders() });
-        if (!r.ok) {
-          container.innerHTML = '<div class="empty" style="color:var(--red)">Нет доступа к аналитике</div>';
-          return;
-        }
+        if (!r.ok) return;
         const d = await r.json();
-
-        let branchHtml = '';
-        if (d.losses_by_branch && d.losses_by_branch.length > 0) {
-          branchHtml = d.losses_by_branch.map(b =>
-            `<div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.25rem 0;border-bottom:1px solid var(--line)">
-                        <span>${b.branch_name} <span style="color:var(--muted)">(${b.city})</span></span>
-                        <span style="font-family:var(--mono);font-weight:600">${formatMoney(b.losses_tenge)}</span>
-                    </div>`
-          ).join('');
-        }
-
-        let empHtml = '';
-        if (d.losses_by_employee && d.losses_by_employee.length > 0) {
-          empHtml = d.losses_by_employee.map(e =>
-            `<div style="display:flex;justify-content:space-between;font-size:.78rem;padding:.25rem 0;border-bottom:1px solid var(--line)">
-                        <span>${e.fullname || e.username}</span>
-                        <span style="font-family:var(--mono);font-weight:600">${formatMoney(e.losses_tenge)}</span>
-                    </div>`
-          ).join('');
-        }
 
         container.innerHTML = `
                 <div class="stats">
@@ -2277,15 +2476,6 @@
                     <h3>🧠 AI-инсайт дня</h3>
                     <p>${d.ai_daily_insight}</p>
                 </div>` : ''}
-
-                ${d.root_cause_summary ? `
-                <div class="ai-card mt-1" style="border-color:rgba(239,68,68,.2);background:linear-gradient(135deg,rgba(239,68,68,.06),rgba(245,158,11,.06))">
-                    <h3 style="color:var(--amber)">🔍 Причины потерь</h3>
-                    <p>${d.root_cause_summary}</p>
-                </div>` : ''}
-
-                ${branchHtml ? `<div class="card mt-2"><h3>Потери по филиалам</h3>${branchHtml}</div>` : ''}
-                ${empHtml ? `<div class="card mt-1"><h3>Потери по сотрудникам</h3>${empHtml}</div>` : ''}
             `;
       } catch (e) {
         console.error(e);
@@ -2293,69 +2483,9 @@
       }
     }
 
-    async function loadHeatmap(containerId) {
-      const container = document.getElementById(containerId);
-      if (!container) return;
-      container.innerHTML = '<div class="empty">Загрузка...</div>';
-
-      try {
-        const r = await authFetch(`${API}/api/analytics/heatmap/`, { headers: authHeaders() });
-        if (!r.ok) return;
-        const data = await r.json();
-        container.innerHTML = '';
-
-        if (data.length === 0) {
-          container.innerHTML = '<div class="empty">Нет данных</div>';
-          return;
-        }
-
-        data.forEach(h => {
-          container.innerHTML += `
-                    <div class="heat-item">
-                        <div class="heat-dot ${h.status_color}"></div>
-                        <div class="heat-info">
-                            <div class="heat-name">${h.branch_name}</div>
-                            <div class="heat-city">${h.city} · ${h.coordinates.lat.toFixed(2)}°, ${h.coordinates.lng.toFixed(2)}°</div>
-                        </div>
-                        <div class="heat-val" style="color:var(--${h.status_color === 'green' ? 'green' : h.status_color === 'yellow' ? 'amber' : 'red'})">${formatMoney(h.total_losses_tenge)}</div>
-                    </div>`;
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    async function exportSheets() {
-      const btn = document.getElementById('btnExport') || document.getElementById('btnAdmExport');
-      if (btn) setLoading(btn, true, 'Экспорт...');
-
-      try {
-        const r = await authFetch(`${API}/api/analytics/export/google-sheets/`, { headers: authHeaders() });
-        if (!r.ok) {
-          toast('Ошибка экспорта', 'err');
-          return;
-        }
-        const d = await r.json();
-        toast(`Экспортировано ${d.rows_count} записей`, 'ok');
-
-        const resultEl = document.getElementById('exportResult');
-        if (resultEl) {
-          resultEl.innerHTML = `
-                    <div class="card">
-                        <h3 style="color:var(--green)">✓ ${d.message}</h3>
-                        <div class="item-details mt-1">
-                            <div>📄 Таблица: ${d.spreadsheet_name}</div>
-                            <div>📊 Строк: ${d.rows_count}</div>
-                            <div>🕐 ${d.exported_at}</div>
-                        </div>
-                    </div>`;
-        }
-      } catch (e) {
-        console.error(e);
-        toast('Ошибка соединения', 'err');
-      } finally {
-        if (btn) setLoading(btn, false, '📊 Экспорт в Google Sheets');
-      }
+    function downloadReport(period) {
+      toast(`Скачивание отчета за ${period}...`, 'ok');
+      window.open(`${API}/api/reports/pdf?period=${period}`, '_blank');
     }
 
     // ════════════════════════════════════════════
@@ -2434,50 +2564,6 @@
         setTimeout(() => el.remove(), 200);
       }, 3000);
     }
-
-    // ════════════════════════════════════════════
-    // NAV CLICK HANDLERS
-    // ════════════════════════════════════════════
-
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', function () {
-        const view = this.dataset.view;
-        if (view === 'auth') {
-          show('panelAuth');
-          return;
-        }
-
-        if (!TOKEN) {
-          toast('Сначала войдите в систему', 'warn');
-          show('panelAuth');
-          return;
-        }
-
-        const panelMap = {
-          employee: 'panelWorker',
-          report: 'panelWorker',
-          manager: 'panelManager',
-          admin: 'panelAdmin'
-        };
-        const panelId = panelMap[view];
-        if (!panelId) return;
-
-        if (view === 'manager' && ROLE !== 'manager' && ROLE !== 'admin') {
-          toast('Доступ только для менеджеров', 'err');
-          return;
-        }
-        if (view === 'admin' && ROLE !== 'admin') {
-          toast('Доступ только для администраторов', 'err');
-          return;
-        }
-
-        show(panelId);
-        if (view === 'employee') loadWorkerData();
-        if (view === 'manager') loadManagerData();
-        if (view === 'admin') loadAdminData();
-        setActiveNav(view);
-      });
-    });
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && document.getElementById('panelAuth').classList.contains('active')) {
