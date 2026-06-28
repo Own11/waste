@@ -1388,10 +1388,16 @@
             </nav>
 
             <div class="topbar-actions">
+                <select id="languageSelect" class="compact-select" aria-label="Language">
+                    <option value="ru">Рус</option>
+                    <option value="en">En</option>
+                    <option value="kz">Қаз</option>
+                </select>
                 <button class="ghost-button" id="themeToggle" type="button" aria-label="Theme">◐</button>
                 <div id="userInfo" class="user-chip hide">
                     <span id="chipName"></span>
                     <span id="chipRole" class="chip"></span>
+                    <button onclick="logout()" class="btn-out">✕</button>
                 </div>
                 <button class="role-button" id="roleButton" type="button" onclick="doLogin()">Войти</button>
             </div>
