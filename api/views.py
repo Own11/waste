@@ -108,6 +108,10 @@ class WorkerProfileView(views.APIView):
         
         user_serializer = UserSerializer(user)
         
+        # Fetch worker recent write-offs
+        recent_write_offs = WriteOff.objects.filter(employee=user).order_by('-created_at')[:10]
+        wo_serializer = WriteOffSerializer(recent_write_offs, many=True, context={'request': request})
+        
         return Response({
             "profile": user_serializer.data,
             "statistics": {
@@ -117,7 +121,8 @@ class WorkerProfileView(views.APIView):
                 "accuracy_rate_percent": round((approved_count / total_count * 100), 1) if total_count > 0 else 100.0
             },
             "badges": badge_serializer.data,
-            "ai_recommendations": ai_tips
+            "ai_recommendations": ai_tips,
+            "write_offs": wo_serializer.data
         })
 
 
@@ -449,3 +454,43 @@ class AnalyticsExportSheetsView(views.APIView):
             "rows_count": len(export_rows),
             "data": export_rows
         })
+
+
+class HealthView(views.APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        import os
+        roboflow_configured = bool(os.environ.get('ROBOFLOW_API_KEY'))
+        return Response({
+            "status": "ok",
+            "roboflowConfigured": roboflow_configured
+        })
+
+
+class ReportsPDFView(views.APIView):
+    permission_classes = [IsManagerOrAdmin]
+
+    def get(self, request):
+        from django.http import HttpResponse
+        period = request.query_params.get('period', 'month')
+        write_offs = WriteOff.objects.filter(status='approved')
+        
+        # Build plain text report that can be downloaded/printed
+        content = f"BAHANDI AI OPS - REPORT FOR {period.upper()}\n"
+        content += "="*50 + "\n\n"
+        
+        total_losses = 0.0
+        for wo in write_offs:
+            cost = float(wo.quantity) * float(wo.product.unit_price)
+            total_losses += cost
+            date_str = wo.created_at.strftime('%Y-%m-%d %H:%M')
+            content += f"- {date_str} | {wo.branch.name} | {wo.product.name} | {wo.quantity} | {cost:.2f} KZT | Reason: {wo.get_reason_display()}\n"
+            
+        content += "\n" + "="*50 + "\n"
+        content += f"TOTAL APPROVED LOSSES: {total_losses:.2f} KZT\n"
+        
+        response = HttpResponse(content, content_type='text/plain; charset=utf-8')
+        response['Content-Disposition'] = f'attachment; filename="report_{period}.txt"'
+        return response
+

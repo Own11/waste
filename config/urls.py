@@ -16,6 +16,10 @@ urlpatterns = [
     path('api/auth/login/', views.CustomTokenObtainPairView.as_view(), name='token_obtain'),
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
+    # Health and Export endpoints
+    path('api/health', views.HealthView.as_view(), name='api_health'),
+    path('api/reports/pdf', views.ReportsPDFView.as_view(), name='api_reports_pdf'),
+
     # Shared resource endpoints (available to all authenticated users)
     path('api/products/', views.ProductsListView.as_view(), name='products_list'),
     path('api/branches/', views.BranchesListView.as_view(), name='branches_list'),
